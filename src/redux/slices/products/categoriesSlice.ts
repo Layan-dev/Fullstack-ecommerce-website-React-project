@@ -10,14 +10,14 @@ export type CategoriesState = {
   items: Categories[]
   error: null | string
   isLoading: boolean
-  selectedCategory:number|null,
+  selectedCategory:number,
 }
 
 const initialState: CategoriesState = {
   items: [],
   error: null,
   isLoading: false,
-  selectedCategory:null,
+  selectedCategory:0,
 }
 
 export const categoriesSlice = createSlice({
@@ -36,7 +36,7 @@ export const categoriesSlice = createSlice({
        
     // },
 
-    setSelectedCategory:(state, action:PayloadAction<number|null>)=>{
+    setSelectedCategory:(state, action:PayloadAction<number>)=>{
       state.selectedCategory = action.payload
       console.log(state)
     },

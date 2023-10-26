@@ -15,7 +15,7 @@ export default function Products() {
     const url='/mock/e-commerce/products.json';
    
     const products= useSelector((state:RootState)=>state.products.items)
-    const isLoading= useSelector((state:RootState)=>state.products.isLoading)
+const isLoading= useSelector((state:RootState)=>state.products.isLoading)
     const error = useSelector((state: RootState) => state.products.error)
     const selectedCategoryOp=useSelector((state:RootState)=>state.category.selectedCategory)
     
@@ -50,28 +50,11 @@ if( isLoading === true){
   return <div> {error}</div>
  }
  const filterProductByCategory=(selectedCategoryOp:number)=>{
-  products.filter((product)=>{return product.id===selectedCategoryOp?product:product.id})
-  .map((product:Product)=> {
-    return (
-      <div key = {product.id}>
-        <img src={product.image} height="100px" width="100px" alt="Company Avatar" />
-        <p> companyId: {product.id}</p>
-        <p>company name:{product.name}</p>
-        <p> description: {product.description}</p>
-        <Link to={`/products/${product.id}`}>
-        <button> More detail</button>
-        </Link>
-        <button
-          className=" text-red-400 text-xs"
-          onClick={() => dispatch(removeProduct({ productId: product.id }))}>
-          X
-        </button>
-        
-        </div> );}
+    return selectedCategoryOp !==0 ? products.filter((product)=>{return product.categories.includes(selectedCategoryOp)}) : products
+  }
 
-  )
-  
- }
+  const filteredProducts = filterProductByCategory(selectedCategoryOp)
+
   
     return (
       
@@ -85,8 +68,8 @@ if( isLoading === true){
 
          <CategoriesComponent/>
        
-      {
-         products.filter((product)=>{
+      {   filteredProducts&&
+         filteredProducts.filter((product)=>{
           return search.toLocaleLowerCase()===''?product:product.name.includes(search);
          }).map((product:Product)=> {
           return (
