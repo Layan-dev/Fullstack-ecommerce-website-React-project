@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { DecodedUser } from '../redux/slices/products/productSlice'
 
 export function isDecodedUser(obj: unknown): obj is DecodedUser {

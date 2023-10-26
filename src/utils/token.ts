@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import jwt_decode from 'jwt-decode'
 
 import { isDecodedUser } from '../types/type-guards'

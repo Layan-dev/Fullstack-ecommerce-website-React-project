@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -19,7 +20,7 @@ export function ProductsManager() {
     handleGetProducts()
   }, [])
 
-   /**
+  /**
    * If you want to keep things simple you can follow this approach on updating
    * redux state when using async requests instead of using createAsyncThunk
    */

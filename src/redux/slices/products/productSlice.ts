@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
+/* eslint-disable prettier/prettier */
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export type Product = {
   id: number
@@ -40,7 +41,10 @@ export const userSlice = createSlice({
     removeProduct: (state, action: { payload: { productId: number } }) => {
       const filteredItems = state.items.filter((product) => product.id !== action.payload.productId)
       state.items = filteredItems
-    }
+    },
+    getError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
+    },
   }
 })
 export const { removeProduct, addProduct, productsRequest, productsSuccess } = userSlice.actions

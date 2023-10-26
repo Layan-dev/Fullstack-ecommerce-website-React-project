@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useState, ChangeEvent, FormEvent } from 'react'
 import { useDispatch } from 'react-redux'
 

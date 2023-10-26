@@ -1,9 +1,12 @@
+/* eslint-disable prettier/prettier */
 import { configureStore } from '@reduxjs/toolkit'
 import productsReducer from './slices/products/productSlice'
+import productDetailSlice from './slices/products/productDetailSlice'
+import categoriesSlice from './slices/products/categoriesSlice'
 
 export const store = configureStore({
   reducer: {
-    products: productsReducer
+    products: productsReducer  , ProductDetails:productDetailSlice, category:categoriesSlice
   }
 })
 

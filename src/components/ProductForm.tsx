@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ChangeEvent, FormEvent } from 'react'
 import { Product } from '../redux/slices/products/productSlice'
 
