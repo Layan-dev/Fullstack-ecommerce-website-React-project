@@ -96,7 +96,7 @@ Tech Stack: React, TypeScript, and Redux/Redux Toolkit. Styling: CSS/SASS or MUI
 
 **Functionalities for a Visitor:**
 
-- Get list of products
+- Get list of products 
 - Filter products by categories or price
 - Search products by name
 - Add products to a cart

@@ -1,16 +1,14 @@
-/* eslint-disable prettier/prettier */
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { Product } from './productSlice'
 
-
 export type ProductState = {
-  items: Product|null
+  items: Product | null
   error: null | string
   isLoading: boolean
 }
 
 const initialState: ProductState = {
-  items:null,
+  items: null,
   error: null,
   isLoading: false
 }
@@ -22,16 +20,16 @@ export const productDetailSlice = createSlice({
     productsRequest: (state) => {
       state.isLoading = true
     },
-    productsSuccess: (state, action:PayloadAction<Product>) => {
+    productsSuccess: (state, action: PayloadAction<Product>) => {
       state.isLoading = false
       state.items = action.payload
     },
-  
+
     getError: (state, action: PayloadAction<string>) => {
-      state.error = action.payload;
-    },
+      state.error = action.payload
+    }
   }
 })
-export const {  productsRequest, productsSuccess } = productDetailSlice.actions
+export const { productsRequest, productsSuccess } = productDetailSlice.actions
 
 export default productDetailSlice.reducer

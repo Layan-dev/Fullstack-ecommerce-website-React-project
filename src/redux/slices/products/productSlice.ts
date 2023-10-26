@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export type Product = {
@@ -43,8 +42,8 @@ export const userSlice = createSlice({
       state.items = filteredItems
     },
     getError: (state, action: PayloadAction<string>) => {
-      state.error = action.payload;
-    },
+      state.error = action.payload
+    }
   }
 })
 export const { removeProduct, addProduct, productsRequest, productsSuccess } = userSlice.actions
