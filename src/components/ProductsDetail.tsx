@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import { RootState } from '../redux/store'
-import axios from 'axios'
-import { productDetailSlice } from '../redux/slices/products/productDetailSlice'
-import { Product, removeProduct, userSlice } from '../redux/slices/products/productSlice'
+import { useSelector } from 'react-redux'
 
 export default function ProductsDetail() {
   ;<div>ProductsDetail</div>
@@ -15,19 +11,7 @@ export default function ProductsDetail() {
   const productDetail = useSelector((state: RootState) =>
     state.products.items.find((prod) => prod.id.toString() === id)
   )
-  // const error = useSelector((state: RootState) => state.ProductDetails.error)
 
-  //   useEffect(() => {
-  //   function fetchData(){
-  //     axios.get(url)
-  //          .then((response )=> dispatch(productDetailSlice.actions.productsSuccess(response.data)))
-  //          .catch((error)=> dispatch(productDetailSlice.actions.getError(error.message)))
-  //   }
-  //   fetchData();
-
-  // },[])
-  // if( !productDetail){
-  //   return <p>no data yet</p>}
   return (
     <div>
       <div key={productDetail?.id}>

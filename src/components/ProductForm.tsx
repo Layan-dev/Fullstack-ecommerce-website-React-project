@@ -1,5 +1,8 @@
 import { ChangeEvent, FormEvent } from 'react'
 import { Product } from '../redux/slices/products/productSlice'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router'
+import { RootState } from '../redux/store'
 
 type ProductFormProps = {
   product: Product
@@ -8,6 +11,12 @@ type ProductFormProps = {
 }
 
 export function ProductForm({ product, handleSubmit, handleChange }: ProductFormProps) {
+  const { id } = useParams()
+
+  const productInfo = useSelector((state: RootState) =>
+    state.products.items.find((prod) => prod.id.toString() === id)
+  )
+
   const inputStyle =
     'w-full px-3 py-2 text-white border rounded-lg focus:outline-none focus:border-blue-400'
   const labelStyle = 'block text-sm font-medium text-gray-600'
@@ -22,7 +31,7 @@ export function ProductForm({ product, handleSubmit, handleChange }: ProductForm
           type="text"
           name="name"
           id="name"
-          value={product.name}
+          // value={productInfo!= Product? productInfo:productInfo.map((prod:Product)=>({productInfo.name}))}
           onChange={handleChange}
           className={inputStyle}
         />
@@ -94,7 +103,7 @@ export function ProductForm({ product, handleSubmit, handleChange }: ProductForm
       <button
         type="submit"
         className="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">
-        Add Product
+        Edit Product
       </button>
     </form>
   )

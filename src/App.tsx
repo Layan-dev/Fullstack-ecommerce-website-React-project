@@ -9,6 +9,9 @@ import ProductsDetail from './components/ProductsDetail'
 import ShoppigCart from './components/ShoppigCart'
 import Admin from './components/Admin'
 import { NewProductWrapper } from './components/NewProductWrapper'
+import { EditProduct } from './components/EditProduct'
+import Login from './components/Login'
+import ProtectedRoutes from './components/ProtectedRoutes'
 
 function App() {
   return (
@@ -19,7 +22,12 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductsDetail />} />
         <Route path="/cart" element={<ShoppigCart />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/login" element={<Login />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/edit/:id" element={<EditProduct />} />
+          <Route path="/addPr" element={<NewProductWrapper />} />
+        </Route>
       </Routes>
 
       <Footer />
