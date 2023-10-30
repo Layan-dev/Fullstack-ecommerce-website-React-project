@@ -5,6 +5,7 @@ import axios from 'axios'
 import { Product, removeProduct, productSlice } from '../redux/slices/products/productSlice'
 import { Link } from 'react-router-dom'
 import CategoriesComponent from './CategoriesComponent'
+import { addToCart } from '../redux/slices/cartSlice'
 
 export default function Products() {
   const url = '/mock/e-commerce/products.json'
@@ -93,7 +94,7 @@ export default function Products() {
                   <Link to={`/products/${product.id}`}>
                     <button> More detail</button>
                   </Link>
-                  <button>🛒</button>
+                  <button onClick={() => dispatch(addToCart(product))}>🛒</button>
                   <button
                     className=" text-red-400 text-xs"
                     onClick={() => dispatch(removeProduct({ productId: product.id }))}>

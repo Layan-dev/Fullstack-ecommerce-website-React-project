@@ -53,6 +53,13 @@ export const categoriesSlice = createSlice({
 
     getError: (state, action: PayloadAction<string>) => {
       state.error = action.payload
+    },
+    updateCategory: (state, action: { payload: { editCategory: Categories } }) => {
+      const filteredItems = state.items.filter(
+        (category) => category.id !== action.payload.editCategory.id
+      )
+      state.items = filteredItems
+      state.items = [action.payload.editCategory, ...state.items]
     }
   }
 })
@@ -61,7 +68,8 @@ export const {
   categoryRequest,
   categorySuccess,
   removeCategory,
-  addCategory
+  addCategory,
+  updateCategory
 } = categoriesSlice.actions
 
 export default categoriesSlice.reducer

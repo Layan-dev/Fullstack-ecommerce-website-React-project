@@ -12,6 +12,10 @@ import { NewProductWrapper } from './components/NewProductWrapper'
 import { EditProduct } from './components/EditProduct'
 import Login from './components/Login'
 import ProtectedRoutes from './components/ProtectedRoutes'
+import { ProductForm } from './components/ProductForm'
+import { FormEvent, ChangeEvent } from 'react'
+import CategoriesForm from './components/CategoriesForm'
+import Users from './components/Users'
 
 function App() {
   return (
@@ -25,8 +29,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="/admin" element={<Admin />} />
+          <Route path="/Admincategoris" element={<CategoriesForm />} />
           <Route path="/edit/:id" element={<EditProduct />} />
-          <Route path="/addPr" element={<NewProductWrapper />} />
+          <Route path="/addProduct" element={<ProductForm />} />
+          <Route path="/users" element={<Users />} />
         </Route>
       </Routes>
 

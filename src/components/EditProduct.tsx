@@ -59,7 +59,7 @@ export function EditProduct() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    // displayInfo() 
+    // displayInfo()
     // Send the product data to your backend or in this case send it to Redux
     console.log('New product data:', product)
     // let's add Id property to the object (usually IDs are generated automatically on the backend)

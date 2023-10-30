@@ -96,28 +96,28 @@ Tech Stack: React, TypeScript, and Redux/Redux Toolkit. Styling: CSS/SASS or MUI
 
 **Functionalities for a Visitor:**
 
-- Get list of products 
-- Filter products by categories or price
-- Search products by name
-- Add products to a cart
-- Remove products from a cart
+- Get list of products ✅
+- Filter products by categories or price✅
+- Search products by name✅
+- Add products to a cart✅
+- Remove products from a cart✅
 
 **Functionalities for an Admin:**
 
-- Add a new product, update info of a product, remove a product
+- Add a new product, update info of a product, remove a product✅
 
 ### Level 2: Additional Requirements
 
 **Authentication:**
 
 - Implement register and login functionality via email and password
-- Protect the routes based on login and admin status
+- Protect the routes based on login and admin status✅
 
 **Functionalities for an Admin:**
 
 - list all users, delete or block a user.
 - list all orders
-- Add a new category, update info of a category, remove a category
+- Add a new category, update info of a category, remove a category ✅
 
 **Form Validation:**
 

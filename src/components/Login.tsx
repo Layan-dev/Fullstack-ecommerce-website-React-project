@@ -5,12 +5,12 @@ import { RootState } from '../redux/store'
 import axios from 'axios'
 
 import { Adminlogin, login, usersSlice } from '../redux/slices/products/usersSlice'
-import { Route } from 'react-router'
+import { useNavigate } from 'react-router'
 
 export default function Login() {
   const users = useSelector((state: RootState) => state.users.users)
-  const isAdmin = useSelector((state: RootState) => state.users.isAdmin)
 
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const url = '/mock/e-commerce/users.json'
 
@@ -44,6 +44,9 @@ export default function Login() {
         console.log('logeed In')
         if (foundUser && foundUser.role === 'admin') {
           dispatch(Adminlogin(foundUser))
+          navigate('/admin')
+        } else {
+          navigate('/')
         }
       } else {
         console.log('somthing wrong')
@@ -121,11 +124,13 @@ export default function Login() {
                   Forgot password?
                 </a>
               </div>
+
               <button
                 type="submit"
                 className="w-full text-black bg-primary-800 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                 Sign in
               </button>
+
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don’t have an account yet?{' '}
                 <a

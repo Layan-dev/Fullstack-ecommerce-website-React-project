@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { Navigate } from 'react-router'
 
 export type User = {
   id: number
@@ -15,7 +16,6 @@ export type UserState = {
   isLoading: boolean
   isLoggedIn: boolean
   isAdmin: boolean
-
   userData: User | null
 }
 
