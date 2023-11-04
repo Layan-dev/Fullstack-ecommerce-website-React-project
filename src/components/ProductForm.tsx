@@ -9,10 +9,9 @@ import {
   editProduct,
   Product
 } from '../redux/slices/products/productSlice'
-import { AppDispatch, RootState } from '../redux/store'
+import { RootState } from '../redux/store'
 
 import api from '../api'
-import { Link } from 'react-router-dom'
 
 export function ProductForm() {
   const dispatch = useDispatch()
@@ -198,7 +197,7 @@ export function ProductForm() {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {products.items.map((item, index) => (
+            {products.items.map((item) => (
               <tr key={item.id}>
                 <td className="py-4 px-6 border-b border-gray-200">
                   <img src={item.image} width={100} />

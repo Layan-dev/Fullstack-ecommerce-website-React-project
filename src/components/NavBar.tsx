@@ -5,7 +5,7 @@ import { RootState } from '../redux/store'
 // import { logout } from '../redux/slices/products/usersSlice'
 
 export const NavBar = () => {
-  const { isLoggedIn, isAdmin, userData } = useSelector((state: RootState) => state.users)
+  const { isLoggedIn, isAdmin } = useSelector((state: RootState) => state.users)
   const dispatch = useDispatch()
   // const handleAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
   //   dispatch(logout())

@@ -1,13 +1,11 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { orderSlice } from '../redux/slices/products/ordersSlice'
-import { AppDispatch, RootState } from '../redux/store'
+import { RootState } from '../redux/store'
 
-import api from '../api'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import productSlice from '../redux/slices/products/productSlice'
 
 export default function Orders() {
   const dispatch = useDispatch()

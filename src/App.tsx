@@ -8,7 +8,6 @@ import ProductsDetail from './components/ProductsDetail'
 import ShoppigCart from './components/ShoppigCart'
 import Admin from './components/Admin'
 
-import { EditProduct } from './components/EditProduct'
 import Login from './components/Login'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import { ProductForm } from './components/ProductForm'
@@ -34,7 +33,6 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/Admincategoris" element={<CategoriesForm />} />
           <Route path="/orders" element={<Orders />} />
-          <Route path="/edit/:id" element={<EditProduct />} />
           <Route path="/addProduct" element={<ProductForm />} />
           <Route path="/users" element={<Users />} />
         </Route>
