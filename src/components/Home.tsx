@@ -9,7 +9,6 @@ export default function Home() {
     <div>
       <Hero />
       <Products />
-      <WhatWeOffer />
       <NewsLetterForm />
     </div>
   )

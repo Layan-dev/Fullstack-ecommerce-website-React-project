@@ -2,7 +2,9 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export type Order = {
   id: number
-  name: string
+  productId: number
+  userId: number
+  purchasedAt: Date
 }
 
 export type OrderState = {

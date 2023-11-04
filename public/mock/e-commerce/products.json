@@ -1,110 +1,82 @@
 [
   {
     "id": 1,
-    "name": "Laptop",
-    "image": "https://m.media-amazon.com/images/I/81KoSSAwH2L._SL1500_.jpg",
-    "description": "High-performance laptop for all your needs.",
-    "categories": [1, 2],
-    "variants": ["8GB RAM", "16GB RAM"],
-    "sizes": ["13-inch", "15-inch"]
+    "name": "Jigsaw Puzzles for Adults - Starry Night by Vincent Van Gogh, 1000 Piece",
+    "image": "https://m.media-amazon.com/images/I/71lwaAA7ICL.__AC_SX300_SY300_QL70_ML2_.jpg",
+    "description": "Comes in a good packaging, Designed to perfection, Easy to maintain, Packed with features",
+    "categories": [1],
+    "variants": ["1000", "50000"],
+    "sizes": ["Adults"],
+    "price":24
   },
   {
     "id": 2,
-    "name": "Smartphone",
-    "image": "https://m.media-amazon.com/images/I/81SigpJN1KL._SL1500_.jpg",
-    "description": "Latest smartphone with advanced features.",
-    "categories": [1, 3],
-    "variants": ["64GB", "128GB"],
-    "sizes": []
+    "name": "Clementoni Puzzle Monte Rosa Dreaming 500 PCS Multicolor",
+    "image": "https://m.media-amazon.com/images/I/91q4z+RNNIL._AC_SX679_.jpg",
+    "description": "Durable Material: The high-quality materials used ensures that the puzzle can stand up to long periods of use and construction.",
+    "categories": [1],
+    "variants": ["1500"],
+    "sizes": ["14-99"],
+    "price":68
   },
   {
     "id": 3,
-    "name": "Tablet",
-    "image": "https://m.media-amazon.com/images/I/81gC7frRJyL._SL1500_.jpg",
-    "description": "Compact and powerful tablet for work and entertainment.",
-    "categories": [1, 2],
-    "variants": ["32GB", "64GB"],
-    "sizes": ["10-inch", "12-inch"]
+    "name": "Clementoni Puzzle Old Waterway Cottage 500 PCS (49 x 36 CM)",
+    "image": "https://m.media-amazon.com/images/I/91mzEcCCy2L._AC_SX679_.jpg",
+    "description": "Exquisite design: The Old Waterway Cottage Puzzle features a stunning image of a beautiful and idyllic countryside cottage, with intricate details and vibrant colors that bring the puzzle to life.",
+    "categories": [1],
+    "variants": ["500"],
+    "sizes": ["+14 years", "Adults"],
+    "price":67
   },
   {
     "id": 4,
-    "name": "Gaming Console",
-    "image": "https://m.media-amazon.com/images/I/51wPWj--fAL._SL1000_.jpg",
-    "description": "Next-gen gaming console for immersive gameplay.",
-    "categories": [4],
-    "variants": ["500GB", "1TB"],
-    "sizes": []
+    "name": "LEGO® ICONS Bonsai Tree 10281 Building Kit (878 Pieces)",
+    "image": "https://m.media-amazon.com/images/I/617ADFqK3sL._AC_SX679_.jpg",
+    "description": "The LEGO Bonsai Tree 10281 model building kit is a unique gift or mindful project for anyone who loves bonsai trees, plants or building creatively with LEGO Pieces.",
+    "categories": [2],
+    "variants": ["878"],
+    "sizes": [],
+    "price":299
   },
   {
     "id": 5,
-    "name": "Camera",
-    "image": "https://m.media-amazon.com/images/I/41zG3lqcEvL._SL1000_.jpg",
-    "description": "High-resolution camera for capturing memories.",
-    "categories": [5],
-    "variants": ["24MP", "36MP"],
-    "sizes": []
+    "name": "LEGO® ICONS Orchid 10311 Plant Decor Building Kit (608 Pieces)",
+    "image": "https://m.media-amazon.com/images/I/615sfDH7Y8L._AC_SX679_.jpg",
+    "description": "Build your own orchid – Enjoy a rewarding building project as you create a plant display to enhance your home or office decor with this LEGO Orchid 10311 building kit",
+    "categories": [2],
+    "variants": ["608"],
+    "sizes": [],
+    "price":232
   },
   {
     "id": 6,
-    "name": "Fitness Tracker",
-    "image": "https://m.media-amazon.com/images/I/61JL0ccPltL._SL1500_.jpg",
-    "description": "Track your health and fitness goals with this smart tracker.",
-    "categories": [6],
-    "variants": ["Small", "Large"],
-    "sizes": []
+    "name": "LEGO® Ideas Vincent van Gogh The Starry Night 21333 Building Kit (2,316 Pieces)",
+    "image": "https://m.media-amazon.com/images/I/618D0sZzRrL._AC_SX679_.jpg",
+    "description": "3D LEGO brick art model (21333) of a Vincent van Gogh masterPieces – Recreate the timeless beauty of Van Gogh’s 1889 painting, The Starry Night, with this LEGO Ideas build-and-display set for adults",
+    "categories": [2],
+    "variants": ["2316"],
+    "sizes": ["Adults"],
+    "price":800
   },
   {
     "id": 7,
-    "name": "Home Theater System",
-    "image": "https://m.media-amazon.com/images/I/615+VvllX6L._SL1500_.jpg",
-    "description": "Create a cinematic experience at home with this system.",
-    "categories": [7],
-    "variants": ["5.1 Surround Sound", "7.1 Surround Sound"],
-    "sizes": []
+    "name": "Mumoo Bear Puzzles With Hexagonal Base Brain Teaser Intelligence Toy Gift For Kids Adult",
+    "image": "https://m.media-amazon.com/images/I/61bAa9-22FL._AC_SX679_.jpg",
+    "description": "11 pieces hexagon tangram puzzle is the world's oldest and most well known silhouette puzzle,fun for all ages.",
+    "categories": [3],
+    "variants": ["11"],
+    "sizes": ["All Ages"],
+    "price":20
   },
   {
     "id": 8,
-    "name": "Coffee Maker",
-    "image": "https://m.media-amazon.com/images/I/51JKNxKS1dL._SL1200_.jpg",
-    "description": "Brew your favorite coffee at home with ease.",
-    "categories": [8],
-    "variants": ["Single Serve", "Drip Coffee Maker"],
-    "sizes": []
-  },
-  {
-    "id": 9,
-    "name": "Bluetooth Speaker",
-    "image": "https://m.media-amazon.com/images/I/61N2a48p9xL._SL1200_.jpg",
-    "description": "Portable speaker for music on the go.",
-    "categories": [9],
-    "variants": ["Black", "White"],
-    "sizes": []
-  },
-  {
-    "id": 10,
-    "name": "External Hard Drive",
-    "image": "https://m.media-amazon.com/images/I/81pAOJFcsFS._SL1500_.jpg",
-    "description": "Store and backup your data with high-capacity storage.",
-    "categories": [10],
-    "variants": ["1TB", "2TB"],
-    "sizes": []
-  },
-  {
-    "id": 11,
-    "name": "Headphones",
-    "image": "https://m.media-amazon.com/images/I/51j7l0QISqL._SL1000_.jpg",
-    "description": "Noise-cancelling headphones for immersive audio experience.",
-    "categories": [9],
-    "variants": ["Over-Ear", "In-Ear"],
-    "sizes": []
-  },
-  {
-    "id": 12,
-    "name": "Smartwatch",
-    "image": "https://m.media-amazon.com/images/I/811GOkDSOaL._SL1500_.jpg",
-    "description": "Stay connected and track your activities with this smartwatch.",
-    "categories": [6],
-    "variants": ["Titanium"],
-    "sizes": []
+    "name": "3D Wooden Brain Teaser Puzzle by Sharp Brain Zone.",
+    "image": "https://m.media-amazon.com/images/I/71c96aotbFL._AC_SX679_.jpg",
+    "description": "BUILD YOUR BRAIN – Intellectual challenge for problem solvers and game lovers, this wooden “Tetris” piece puzzle delivers hours and hours of fun and mystery; take apart and put back together",
+    "categories": [3],
+    "variants": ["54"],
+    "sizes": ["Kid","Youth","Adult"],
+    "price":45
   }
 ]

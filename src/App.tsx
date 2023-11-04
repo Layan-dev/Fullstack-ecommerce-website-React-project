@@ -1,4 +1,3 @@
-import { ProductsManager } from './components/ProductsManager'
 import './App.css'
 import { NavBar } from './components/NavBar'
 import Products from './components/Products'
@@ -8,14 +7,16 @@ import Home from './components/Home'
 import ProductsDetail from './components/ProductsDetail'
 import ShoppigCart from './components/ShoppigCart'
 import Admin from './components/Admin'
-import { NewProductWrapper } from './components/NewProductWrapper'
+
 import { EditProduct } from './components/EditProduct'
 import Login from './components/Login'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import { ProductForm } from './components/ProductForm'
-import { FormEvent, ChangeEvent } from 'react'
 import CategoriesForm from './components/CategoriesForm'
 import Users from './components/Users'
+import UserProfilePage from './components/UserProfilePage'
+import Orders from './components/Orders'
+import Register from './components/Register'
 
 function App() {
   return (
@@ -27,9 +28,12 @@ function App() {
         <Route path="/products/:id" element={<ProductsDetail />} />
         <Route path="/cart" element={<ShoppigCart />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/userProfile" element={<UserProfilePage />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="/admin" element={<Admin />} />
           <Route path="/Admincategoris" element={<CategoriesForm />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/edit/:id" element={<EditProduct />} />
           <Route path="/addProduct" element={<ProductForm />} />
           <Route path="/users" element={<Users />} />

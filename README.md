@@ -90,8 +90,8 @@ Tech Stack: React, TypeScript, and Redux/Redux Toolkit. Styling: CSS/SASS or MUI
 
 **Pages to Create:**
 
-1. Home page (list all the products)
-2. Product page (contain the details of a product)
+1. Home page (list all the products) ✅
+2. Product page (contain the details of a product)✅
 3. Admin page
 
 **Functionalities for a Visitor:**
@@ -110,13 +110,13 @@ Tech Stack: React, TypeScript, and Redux/Redux Toolkit. Styling: CSS/SASS or MUI
 
 **Authentication:**
 
-- Implement register and login functionality via email and password
+- Implement register and login functionality via email and password ✅
 - Protect the routes based on login and admin status✅
 
 **Functionalities for an Admin:**
 
-- list all users, delete or block a user.
-- list all orders
+- list all users, delete or block a user.✅
+- list all orders✅
 - Add a new category, update info of a category, remove a category ✅
 
 **Form Validation:**
@@ -128,8 +128,8 @@ Tech Stack: React, TypeScript, and Redux/Redux Toolkit. Styling: CSS/SASS or MUI
 If you have a higher skill level and finish the previous requirements before the deadline, you can tackle the following bonus tasks:
 
 - Messages, show loading, success, and error messages (e.g., when loading products list or adding new product)
-- Implement pagination feature
-- Create a Profile Page (only available if user logs in), implement editing user profile feature (user can change first name, last name)
+- Implement pagination feature ✅
+- Create a Profile Page (only available if user logs in), implement editing user profile feature (user can change first name, last name) ✅
 
 - Peer Review:
 - Review the code and implementation of 2 assignments from other participants.

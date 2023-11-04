@@ -10,6 +10,7 @@ import {
   updateCategory
 } from '../redux/slices/products/categoriesSlice'
 import api from '../api'
+import { Link } from 'react-router-dom'
 
 export default function CategoriesForm() {
   const dispatch = useDispatch<AppDispatch>()
@@ -64,6 +65,19 @@ export default function CategoriesForm() {
   }
   return (
     <div>
+      <div className="flex">
+        <Link to="/admin">
+          <button>products</button>
+        </Link>
+
+        <Link to="/orders">
+          <button>orders</button>
+        </Link>
+
+        <Link to="/users">
+          <button>users</button>
+        </Link>
+      </div>
       CategoriesForm
       <div className="flex">
         <div className="w-3/4 bg-white p-4">
