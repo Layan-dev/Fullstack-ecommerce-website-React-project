@@ -1,31 +1,37 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router'
-import { RootState } from '../redux/store'
-import { addUser, login, usersRequest, usersSuccess } from '../redux/slices/products/usersSlice'
+import React, { ChangeEvent, FormEvent, useState } from 'react'
+// import { useDispatch, useSelector } from 'react-redux'
+// import { useNavigate } from 'react-router'
+// import { RootState } from '../redux/store'
+// import { addUser, login, usersRequest, usersSuccess } from '../redux/slices/products/usersSlice'
 import api from '../api'
 import { Link } from 'react-router-dom'
+import { AxiosError } from 'axios'
 
 export default function Regeregister() {
-  const users = useSelector((state: RootState) => state.users.users)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const [errorMessage, setErrorMessage] = useState('')
+  // const users = useSelector((state: RootState) => state.users.users)
+  // const navigate = useNavigate()
+  // const dispatch = useDispatch()
+  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [successMessage, setSuccessMessage] = useState<null | string>(null)
+  const [loading, setloading] = useState(false)
 
-  useEffect(() => {
-    handleGetUsers()
-  }, [])
-  const handleGetUsers = async () => {
-    dispatch(usersRequest())
+  // useEffect(() => {
+  //   handleGetUsers()
+  // }, [])
+  // const handleGetUsers = async () => {
+  //   dispatch(usersRequest())
 
-    const res = await api.get('/mock/e-commerce/users.json')
-    dispatch(usersSuccess(res.data))
-  }
+  //   const res = await api.get('/mock/e-commerce/users.json')
+  //   dispatch(usersSuccess(res.data))
+  // }
 
   const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
     email: '',
     password: ''
   })
+  console.log(user)
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUser((prevState) => {
@@ -34,49 +40,83 @@ export default function Regeregister() {
   }
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    if (!user.email || !user.password) {
-      setErrorMessage('Please fill in all fields')
-
-      return
-    }
     try {
-      const foundUser = users.find((userData) => userData.email === user.email)
-
-      if (foundUser && foundUser.email === user.email) {
-        console.log('user already exist')
-      } else {
-        dispatch(addUser(user))
-        console.log(user)
-        dispatch(login(true))
-        alert('you sucssfully register')
-        navigate('/')
-        console.log('sucsses')
-      }
+      setloading(true)
+      const res = await api.post('/api/auth/register', user)
+      console.log('res', res)
+      setSuccessMessage(res.data.msg)
+      setErrorMessage(null)
     } catch (error) {
-      setErrorMessage('An error occurred')
+      console.log('error', error)
+      if (error instanceof AxiosError) {
+        setErrorMessage(error.response?.data)
+        setSuccessMessage(null)
+      }
+    } finally {
+      setloading(false)
     }
+
+    // try {
+    //   const foundUser = users.find((userData) => userData.email === user.email)
+
+    //   if (foundUser && foundUser.email === user.email) {
+    //     console.log('user already exist')
+    //   } else {
+    //     dispatch(addUser(user))
+    //     console.log(user)
+    //     dispatch(login(true))
+    //     alert('you sucssfully register')
+    //     navigate('/')
+    //     console.log('sucsses')
+    //   }
+    // } catch (error) {
+    //   setErrorMessage('An error occurred')
+    // }
   }
   return (
     <div>
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-          <a
-            href="#"
-            className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-            <img
-              className="w-8 h-8 mr-2"
-              src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-              alt="logo"
-            />
-            Flowbite
-          </a>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Create and account
               </h1>{' '}
-              {errorMessage && <div className="error-message">{errorMessage}</div>}
+              {errorMessage && <div className="error-message text-red-600">{errorMessage}</div>}
+              {successMessage && (
+                <div className="error-message text-green-600">{successMessage}</div>
+              )}
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    First name
+                  </label>
+                  <input
+                    onChange={handleInputChange}
+                    type="text"
+                    name="firstName"
+                    id="firstName"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="john"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="lastName"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Last name
+                  </label>
+                  <input
+                    onChange={handleInputChange}
+                    type="text"
+                    name="lastName"
+                    id="lastName"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="doe"
+                  />
+                </div>
                 <div>
                   <label
                     htmlFor="email"
@@ -103,21 +143,6 @@ export default function Regeregister() {
                     type="password"
                     name="password"
                     id="password"
-                    placeholder="••••••••"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="confirm-password"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Confirm password
-                  </label>
-                  <input
-                    onChange={handleInputChange}
-                    type="confirm-password"
-                    name="confirm-password"
-                    id="confirm-password"
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />

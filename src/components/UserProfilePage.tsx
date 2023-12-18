@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { RootState } from '../redux/store'
 import { usersInfoSlice } from '../redux/slices/products/userInfoSlice'
-import { updateUser } from '../redux/slices/products/usersSlice'
+// import { updateUser } from '../redux/slices/products/usersSlice'
 
 export default function UserProfilePage() {
   const url = '/mock/e-commerce/users.json'
@@ -43,8 +43,8 @@ export default function UserProfilePage() {
   }
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    const updateUserData = { id: users?.id, ...user }
-    dispatch(updateUser(updateUserData))
+    const updateUserData = { id: users?.userID, ...user }
+    // dispatch(updateUser(updateUserData))
     console.log(user)
   }
   return (
@@ -66,7 +66,7 @@ export default function UserProfilePage() {
       <div>
         <h2>
           <b> ID:</b>
-          {users?.id}
+          {users?.userID}
         </h2>
         <h2>
           <b>Email:</b>

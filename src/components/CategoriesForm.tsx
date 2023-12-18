@@ -2,10 +2,13 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../redux/store'
 import {
-  Categories,
+  Category,
   addCategory,
   categoryRequest,
   categorySuccess,
+  deleteCategoryThunk,
+  editCategoryThunk,
+  getCategoriesThunk,
   removeCategory,
   updateCategory
 } from '../redux/slices/products/categoriesSlice'
@@ -14,13 +17,16 @@ import { Link } from 'react-router-dom'
 
 export default function CategoriesForm() {
   const dispatch = useDispatch<AppDispatch>()
-  const catiegores = useSelector((state: RootState) => state.category.items)
+  const catiegories = useSelector((state: RootState) => state.category.items)
 
   const [category, setCategory] = useState({ name: '' })
-  const [selectedCategory, setSelectedCategory] = useState<Categories | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 
+  // useEffect(() => {
+  //   handleGetCategories()
+  // }, [])
   useEffect(() => {
-    handleGetCategories()
+    dispatch(getCategoriesThunk())
   }, [])
 
   useEffect(() => {
@@ -38,30 +44,42 @@ export default function CategoriesForm() {
     })
   }
 
-  const handleAddSubmit = (e: FormEvent) => {
+  const handleAddSubmit = async (e: FormEvent) => {
     e.preventDefault()
 
-    if (selectedCategory) {
+    if (selectedCategory && selectedCategory._id) {
       const updatedCategory = { ...selectedCategory, name: category.name }
-      dispatch(updateCategory({ editCategory: updatedCategory }))
+      dispatch(
+        editCategoryThunk({ categoryId: selectedCategory._id, updatedCategory: updatedCategory })
+      )
     } else {
-      const newCategory = { id: new Date().getTime(), ...category }
-      dispatch(addCategory({ category: newCategory }))
+      // const newCategory = { id: new Date().getTime(), ...category }
+      // dispatch(addCategory({ category: newCategory }))
+      const res = await api.post('/api/categories', category)
+      console.log('res', res)
+      console.log('products', catiegories)
     }
 
     setCategory({ name: '' })
     setSelectedCategory(null)
   }
 
-  const handleGetCategories = async () => {
-    dispatch(categoryRequest())
+  // const handleGetCategories = async () => {
+  //   dispatch(categoryRequest())
 
-    const res = await api.get('/mock/e-commerce/categories.json')
-    dispatch(categorySuccess(res.data))
+  //   const res = await api.get('/mock/e-commerce/categories.json')
+  //   dispatch(categorySuccess(res.data))
+  // }
+
+  const handleEditBtnClick = (item: Category) => {
+    setSelectedCategory(item)
   }
 
-  const handleEditBtnClick = (item: Categories) => {
-    setSelectedCategory(item)
+  const handleDeleteCategory = (id: string) => {
+    console.log('id:', id)
+
+    // Distapch delete user Thunk
+    dispatch(deleteCategoryThunk(id))
   }
   return (
     <div>
@@ -117,12 +135,12 @@ export default function CategoriesForm() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {catiegores.map((item, index) => {
-                  const { id, name } = item
-                  const isEditing = selectedCategory && selectedCategory.id === id
+                {catiegories.map((item, index) => {
+                  const { _id, name } = item
+                  const isEditing = selectedCategory && selectedCategory._id === _id
 
                   return (
-                    <tr key={id}>
+                    <tr key={_id}>
                       <td className="py-4 px-6 border-b border-gray-200">{index + 1}</td>
                       <td className="py-4 px-6 border-b border-gray-200">{name}</td>
                       <td className="py-4 px-6 border-b border-gray-200 whitespace">
@@ -133,7 +151,7 @@ export default function CategoriesForm() {
                         </button>
                         <button
                           className="text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-blue active:bg-red-600 py-2 px-4 font-small"
-                          onClick={() => dispatch(removeCategory({ categoryId: id }))}>
+                          onClick={() => handleDeleteCategory(item._id)}>
                           Delete
                         </button>
                       </td>

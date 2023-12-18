@@ -30,6 +30,13 @@ export const NavBar = () => {
             🛒
           </Link>
         </li>
+        <li className="mr-1">
+          <Link
+            to="/admin"
+            className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">
+            Admin
+          </Link>
+        </li>
 
         {/* <li className="mr-1">
           <Link
@@ -67,15 +74,9 @@ export const NavBar = () => {
           </>
         )}
 
-        {isLoggedIn && isAdmin && (
-          <li className="mr-1">
-            <Link
-              to="/admin"
-              className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">
-              Admin
-            </Link>
-          </li>
-        )}
+        {/* {isLoggedIn && isAdmin && (
+      
+        )} */}
         {isLoggedIn && !isAdmin && (
           <li className="mr-1">
             <Link

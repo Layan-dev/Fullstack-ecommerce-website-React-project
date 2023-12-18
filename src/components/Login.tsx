@@ -1,31 +1,26 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { RootState } from '../redux/store'
-import axios from 'axios'
+// import { RootState } from '../redux/store'
+// import axios from 'axios'
 
-import { Adminlogin, login, usersSlice } from '../redux/slices/products/usersSlice'
+// import { Adminlogin, login, usersSlice } from '../redux/slices/products/usersSlice'
 import { useNavigate } from 'react-router'
+import api from '../api'
+import { AppDispatch, RootState } from '../redux/store'
+import { loginThunk } from '../redux/slices/products/usersSlice'
 
 export default function Login() {
-  const users = useSelector((state: RootState) => state.users.users)
+  // const users = useSelector((state: RootState) => state.users.users)
+  const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  const [successMessage, setSuccessMessage] = useState<null | string>(null)
+  const [loading, setloading] = useState(false)
+  const state = useSelector((state: RootState) => state)
+  const user = state.users.userData
+  const users = state.users
+  const dispatch = useDispatch<AppDispatch>()
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const url = '/mock/e-commerce/users.json'
-
-  useEffect(() => {
-    function fetchData() {
-      axios
-        .get(url)
-        .then((response) => dispatch(usersSlice.actions.usersSuccess(response.data)))
-        .catch((error) => console.log(usersSlice.actions.getError(error)))
-    }
-
-    fetchData()
-  }, [dispatch])
-
-  const [user, setUser] = useState({
+  const [credentials, setUser] = useState({
     email: '',
     password: ''
   })
@@ -38,33 +33,52 @@ export default function Login() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     try {
-      const foundUser = users.find((userData) => userData.email === user.email)
-      if (foundUser && foundUser.password === user.password) {
-        dispatch(login(foundUser))
-        console.log('logeed In')
-        if (foundUser && foundUser.role === 'admin') {
-          dispatch(Adminlogin(foundUser))
-          navigate('/admin')
-        } else {
-          navigate('/')
+      setloading(true)
+      // const res = await api.post('/api/auth/login', user)
+      // console.log('res', res)
+      // setSuccessMessage(res.data.msg)
+      dispatch(loginThunk(credentials)).then((res) => {
+        if (res.meta.requestStatus === 'fulfilled') {
+          console.log('is there token?', res.payload)
+          localStorage.setItem('token', res.payload.token)
         }
-      } else {
-        alert('email or password are wrong, try again ')
-        console.log('somthing wrong')
-      }
+      })
+      // setErrorMessage(null)
     } catch (error) {
-      console.log(error)
+      // console.log('error', error)
+      // if (error instanceof AxiosError) {
+      //   setErrorMessage(error.response?.data)
+      //   setSuccessMessage(null)
     }
+    // } finally {
+    //   setloading(false)
+    // }
   }
+  // const handleSubmit = async (event: FormEvent) => {
+  //   event.preventDefault()
+  //   try {
+  //     const foundUser = users.find((userData) => userData.email === user.email)
+  //     if (foundUser && foundUser.password === user.password) {
+  //       dispatch(login(foundUser))
+  //       console.log('logeed In')
+  //       if (foundUser && foundUser.role === 'admin') {
+  //         dispatch(Adminlogin(foundUser))
+  //         navigate('/admin')
+  //       } else {
+  //         navigate('/')
+  //       }
+  //     } else {
+  //       alert('email or password are wrong, try again ')
+  //       console.log('somthing wrong')
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a
-          href="#"
-          className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-          Flowbite
-        </a>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -84,7 +98,7 @@ export default function Login() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                   onChange={handleInputChange}
-                  value={user.email}
+                  value={credentials.email}
                 />
               </div>
               <div>
@@ -100,7 +114,7 @@ export default function Login() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="••••••••"
                   onChange={handleInputChange}
-                  defaultValue={user.password}
+                  defaultValue={credentials.password}
                 />
               </div>
 
@@ -119,8 +133,12 @@ export default function Login() {
                 </a>
               </p>
             </form>
+            {/* {errorMessage && <div className="error-message text-red-600">{errorMessage}</div>}
+            {successMessage && <div className="error-message text-green-600">{successMessage}</div>} */}
           </div>
         </div>
+        {users.error && <p className="text-red-600">{users.error}</p>}
+        {successMessage && <p className="text-green-600">{successMessage}</p>}
       </div>
     </section>
   )

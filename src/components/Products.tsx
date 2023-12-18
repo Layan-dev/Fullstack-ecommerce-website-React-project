@@ -1,32 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import { RootState } from '../redux/store'
+import { AppDispatch, RootState } from '../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
-import { Product, productSlice } from '../redux/slices/products/productSlice'
-import { Link } from 'react-router-dom'
+import { Product, getProductsThunk, productSlice } from '../redux/slices/products/productSlice'
+import { Link, useParams } from 'react-router-dom'
 import CategoriesComponent from './CategoriesComponent'
 import { addToCart } from '../redux/slices/cartSlice'
+import api from '../api'
 
 export default function Products() {
-  const url = '/mock/e-commerce/products.json'
+  const url = 'http://localhost:5050/api/products/'
 
   const products = useSelector((state: RootState) => state.products.items)
   const isLoading = useSelector((state: RootState) => state.products.isLoading)
   const error = useSelector((state: RootState) => state.products.error)
   const selectedCategoryOp = useSelector((state: RootState) => state.category.selectedCategory)
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    function fetchData() {
-      axios
-        .get(url)
-        .then((response) => dispatch(productSlice.actions.productsSuccess(response.data)))
-        .catch((error) => console.log(productSlice.actions.getError(error.message)))
-    }
+    dispatch(getProductsThunk())
+  }, [])
 
-    fetchData()
-  }, [dispatch])
+  // useEffect(() => {
+  //   function fetchData() {
+  //     axios
+  //       .get(url)
+  //       .then((response) => dispatch(productSlice.actions.productsSuccess(response.data)))
+  //       .catch((error) => console.log(productSlice.actions.getError(error.message)))
+  //   }
+
+  //   fetchData()
+  // }, [])
 
   const [search, setSearch] = useState('')
 
@@ -40,10 +45,17 @@ export default function Products() {
   if (error) {
     return <div> {error}</div>
   }
-  const filterProductByCategory = (selectedCategoryOp: number) => {
-    return selectedCategoryOp !== 0
+  //In this case I get all list items when app is loading.
+  //  After user changes the filter options
+  //I need to send a get request with filters params and wait for response.
+  // After that update a list of items on UI.
+  const filterProductByCategory = (selectedCategoryOp: string) => {
+    return selectedCategoryOp !== ''
       ? products.filter((product) => {
-          return product.categories.includes(selectedCategoryOp)
+          return product.category.find((cat) => cat._id === selectedCategoryOp)
+          // return product
+          // console.log('this is selected categopry op', selectedCategoryOp)
+          // console.log('this is products', product)
         })
       : products
   }
@@ -85,7 +97,7 @@ export default function Products() {
           .map((product: Product) => {
             return (
               <div
-                key={product.id}
+                key={product._id}
                 className="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
                 <a href="#">
                   <img
@@ -101,7 +113,7 @@ export default function Products() {
                       <p className="text-lg font-semibold text-black cursor-auto my-3">
                         {product.price}RS
                       </p>
-                      <Link to={`/products/${product.id}`}>
+                      <Link to={`/products/${product._id}`}>
                         <button> More detail</button>
                       </Link>
                       <div onClick={() => dispatch(addToCart(product))} className="ml-auto">

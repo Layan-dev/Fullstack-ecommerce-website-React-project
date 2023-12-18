@@ -1,26 +1,23 @@
 import axios from 'axios'
 import React, { useEffect } from 'react'
-import {
-  Categories,
-  removeCategory,
-  categoriesSlice
-} from '../redux/slices/products/categoriesSlice'
+import { Category, removeCategory, categoriesSlice } from '../redux/slices/products/categoriesSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
+import { Link } from 'react-router-dom'
 
 // const type Prop={
 //   setSelected=React.Dispatch<React.SetStateAction<Categories | null | undefined>>
 // }
 export default function CategoriesComponent() {
-  const categoriesUrl = '/mock/e-commerce/categories.json'
+  const categoriesUrl = 'http://localhost:5050/api/categories/'
   const dispatch = useDispatch()
   const categories = useSelector((state: RootState) => state.category.items)
-  const selectedCategoryOp = useSelector((state: RootState) => state.category.selectedCategory)
 
   useEffect(() => {
     function fetchCategories() {
       axios
         .get(categoriesUrl)
+        // .then((response) => console.log(categoriesSlice.actions.categorySuccess(response.data)))
         .then((response) => dispatch(categoriesSlice.actions.categorySuccess(response.data)))
         .catch((error) => console.log(categoriesSlice.actions.getError(error.message)))
     }
@@ -28,10 +25,11 @@ export default function CategoriesComponent() {
   }, [dispatch])
 
   const handleSelectedCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedop = categories.find((x) => x.id === Number(event.target.value))
-    console.log(selectedop)
+    console.log('this is categories', categories)
+    const selectedop = categories.find((x) => x._id === event.target.value)
+    console.log('this is selected cat', selectedop)
     if (selectedop != undefined)
-      dispatch(categoriesSlice.actions.setSelectedCategory(selectedop.id))
+      dispatch(categoriesSlice.actions.setSelectedCategory(selectedop._id))
   }
 
   return (
@@ -40,11 +38,11 @@ export default function CategoriesComponent() {
       <label>
         filter by category
         <select onChange={handleSelectedCategory}>
-          {categories.map((category: Categories) => {
+          {categories.map((category: Category) => {
             return (
-              <option key={category.id} value={category.id}>
+              <option key={category._id} value={category._id}>
                 {' '}
-                {category.id}:{category.name}
+                {category.name}
               </option>
             )
           })}
