@@ -6,6 +6,7 @@ import categoriesSlice from './slices/products/categoriesSlice'
 import cartSlice from './slices/cartSlice'
 import usersSlice from './slices/products/usersSlice'
 import ordersSlice from './slices/products/ordersSlice'
+// import paginationSlice from './slices/products/paginationSlice'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     cart: cartSlice,
     userInfo: usersSlice,
     order: ordersSlice
+    // pagination: paginationSlice
   }
 })
 

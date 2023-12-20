@@ -1,42 +1,54 @@
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { AppDispatch, RootState } from '../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
-import { Product, getProductsThunk, productSlice } from '../redux/slices/products/productSlice'
-import { Link, useParams } from 'react-router-dom'
+import {
+  Product,
+  getProductsRequestThunk,
+  getProductsThunk,
+  getSearchByNameThunk
+} from '../redux/slices/products/productSlice'
+import { Link, useSearchParams } from 'react-router-dom'
 import CategoriesComponent from './CategoriesComponent'
 import { addToCart } from '../redux/slices/cartSlice'
-import api from '../api'
+// import { getPagesThunk } from '../redux/slices/products/paginationSlice'
 
 export default function Products() {
-  const url = 'http://localhost:5050/api/products/'
+  const state = useSelector((state: RootState) => state)
+  const currentItems = state.products.items
+  const isLoading = state.products.isLoading
+  const error = state.products.error
+  // const selectedCategoryOp = state.category.selectedCategory
 
-  const products = useSelector((state: RootState) => state.products.items)
-  const isLoading = useSelector((state: RootState) => state.products.isLoading)
-  const error = useSelector((state: RootState) => state.products.error)
-  const selectedCategoryOp = useSelector((state: RootState) => state.category.selectedCategory)
+  // const [currentPage, setCurrentPage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const page = searchParams.get('pageNumber') || 0
+  console.log('searchParams', searchParams.get('pageNumber'))
+  console.log('')
+  const [search, setSearch] = useState('')
+  const pagination = {
+    pageNumber: state.products.pageNumber,
+    // perPage: state.products.perPage,
+    totalPages: state.products.totalPages
+    // totalProducts: state.products.totalProducts
+  }
 
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    dispatch(getProductsThunk())
+    if (page) {
+      handleGetProductsByNextPage(Number(pagination.pageNumber))
+    } else {
+      dispatch(getProductsThunk())
+    }
   }, [])
 
-  // useEffect(() => {
-  //   function fetchData() {
-  //     axios
-  //       .get(url)
-  //       .then((response) => dispatch(productSlice.actions.productsSuccess(response.data)))
-  //       .catch((error) => console.log(productSlice.actions.getError(error.message)))
-  //   }
-
-  //   fetchData()
-  // }, [])
-
-  const [search, setSearch] = useState('')
-
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 3
+  useEffect(() => {
+    if (page) {
+      handleGetProductsByNextPage(Number(pagination.pageNumber))
+    } else {
+      dispatch(getProductsThunk())
+    }
+  }, [])
 
   if (isLoading === true) {
     return <p>loading...</p>
@@ -45,42 +57,45 @@ export default function Products() {
   if (error) {
     return <div> {error}</div>
   }
-  //In this case I get all list items when app is loading.
-  //  After user changes the filter options
-  //I need to send a get request with filters params and wait for response.
-  // After that update a list of items on UI.
-  const filterProductByCategory = (selectedCategoryOp: string) => {
-    return selectedCategoryOp !== ''
-      ? products.filter((product) => {
-          return product.category.find((cat) => cat._id === selectedCategoryOp)
-          // return product
-          // console.log('this is selected categopry op', selectedCategoryOp)
-          // console.log('this is products', product)
-        })
-      : products
+
+  const filteredProducts = currentItems
+  console.log('filtered products', filteredProducts)
+  const totalPages = pagination.totalPages
+
+  // const handlePageChange = (pageNumber: number) => {
+  //   setCurrentPage(pageNumber)
+  // }
+  const handleGetProductsByName = async (search: string, selectedPage: number) => {
+    dispatch(getSearchByNameThunk({ search, selectedPage: selectedPage.toString() }))
+    setSearchParams({ pageNumber: selectedPage.toString() })
   }
 
-  const filteredProducts = filterProductByCategory(selectedCategoryOp)
-
-  const indexOfLastProduct = currentPage * itemsPerPage
-  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct)
-
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
-
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber)
+  const handleSearch = async (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+    await dispatch(
+      getSearchByNameThunk({
+        search: e.target.value,
+        selectedPage: pagination.pageNumber.toString()
+      })
+    )
+    console.log('search', e.target.value)
+    console.log('search local state', search)
   }
 
+  const handleGetProductsByNextPage = async (selectedPage: number) => {
+    dispatch(getProductsRequestThunk(selectedPage.toString()))
+    setSearchParams({ pageNumber: selectedPage.toString() })
+  }
   return (
     <div>
       <div>
         <form>
           <input
+            type="search"
+            title="search"
             id="outlined-basic"
             placeholder="search by company name"
-            type="text"
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={handleSearch}
           />
         </form>
       </div>
@@ -90,10 +105,10 @@ export default function Products() {
       <section
         id="Projects"
         className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">
-        {currentProducts
-          .filter((product) => {
-            return search.toLocaleLowerCase() === '' ? product : product.name.includes(search)
-          })
+        {currentItems
+          // .filter((product) => {
+          //   return search.toLocaleLowerCase() === '' ? product : product.name.includes(search)
+          // })
           .map((product: Product) => {
             return (
               <div
@@ -143,11 +158,33 @@ export default function Products() {
           <button
             className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             key={pageNumber}
-            onClick={() => handlePageChange(pageNumber)}>
+            onClick={() => {
+              if (search) {
+                handleGetProductsByName(search, pageNumber)
+              } else {
+                handleGetProductsByNextPage(pageNumber)
+              }
+            }}>
             {pageNumber}
           </button>
         ))}
       </div>
     </div>
   )
+  // const filterProductByCategory = (selectedCategoryOp: string) => {
+  //   return selectedCategoryOp !== ''
+  //     ? products.filter((product) => {
+  //         return product.category.find((cat) => cat._id === selectedCategoryOp)
+  //         // return product
+  //         // console.log('this is selected categopry op', selectedCategoryOp)
+  //         // console.log('this is products', product)
+  //       })
+  //     : products
+  // }
+
+  // const itemsPerPage = pagination.perPage
+
+  // if ((search, page)) {
+  //   handleGetProductsByName(search, pagination.pageNumber)
+  // }
 }

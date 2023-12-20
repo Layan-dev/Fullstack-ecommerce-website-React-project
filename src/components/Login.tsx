@@ -5,8 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // import axios from 'axios'
 
 // import { Adminlogin, login, usersSlice } from '../redux/slices/products/usersSlice'
-import { useNavigate } from 'react-router'
-import api from '../api'
+
 import { AppDispatch, RootState } from '../redux/store'
 import { loginThunk } from '../redux/slices/products/usersSlice'
 
