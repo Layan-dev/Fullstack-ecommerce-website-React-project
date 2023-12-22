@@ -69,6 +69,30 @@ export const getSearchByNameThunk = createAsyncThunk(
     }
   }
 )
+export const getSortProductThunk = createAsyncThunk(
+  'sort/get',
+  async ({ sortOrder, selectedPage }: { sortOrder: string; selectedPage: string }) => {
+    try {
+      const res = await api.get(`/api/products?pageNumber=${selectedPage}&sortOrder=${sortOrder}`)
+      console.log('res from sort products thunk', res.data)
+      return res.data
+    } catch (error) {
+      console.log('err', error)
+    }
+  }
+)
+// export const getSearchBysizeThunk = createAsyncThunk(
+//   'search/get',
+//   async ({ search, selectedPage }: { search: string; selectedPage: string }) => {
+//     try {
+//       const res = await api.get(`/api/products?search=${search}&pageNumber=${selectedPage}`)
+//       console.log('res from serach products thunk', res.data)
+//       return res.data
+//     } catch (error) {
+//       console.log('err', error)
+//     }
+//   }
+// )
 export const deleteProductThunk = createAsyncThunk('products/delete', async (productId: string) => {
   try {
     await api.delete(`api/products/${productId}`)
@@ -163,6 +187,15 @@ export const productSlice = createSlice({
       return state
     })
     builder.addCase(getSearchByNameThunk.fulfilled, (state, action) => {
+      state.items = action.payload?.products
+      state.pageNumber = action.payload?.pageNumber
+      state.perPage = action.payload?.perPage
+      state.totalPages = action.payload?.totalPages
+      state.totalProducts = action.payload?.totalProducts
+      state.isLoading = false
+      return state
+    })
+    builder.addCase(getSortProductThunk.fulfilled, (state, action) => {
       state.items = action.payload?.products
       state.pageNumber = action.payload?.pageNumber
       state.perPage = action.payload?.perPage

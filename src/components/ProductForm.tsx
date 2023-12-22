@@ -215,7 +215,7 @@ export function ProductForm() {
                   type="number"
                   name="quantity"
                   id="quantity"
-                  value={selectedProduct ? selectedProduct.price : product.price}
+                  value={selectedProduct ? selectedProduct.quantity : product.quantity}
                   onChange={handleChange}
                   className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-3 leading-5 placeholder-gray-500 focus:border-gray-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm"
                   placeholder="quantity"

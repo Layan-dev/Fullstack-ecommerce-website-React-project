@@ -2,13 +2,18 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { RootState } from '../redux/store'
+import { logout } from '../redux/slices/products/usersSlice'
 // import { logout } from '../redux/slices/products/usersSlice'
 
 export const NavBar = () => {
   const { isLoggedIn, isAdmin } = useSelector((state: RootState) => state.users)
   const dispatch = useDispatch()
   // const handleAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-  //   dispatch(logout())
+  function handleLogout() {
+    dispatch(logout())
+    localStorage.removeItem('token')
+  }
+
   //   console.log(userData?.role)
   //   console.log('user logged out')
   //   console.log(isLoggedIn)
@@ -37,7 +42,6 @@ export const NavBar = () => {
             Admin
           </Link>
         </li>
-
         {/* <li className="mr-1">
           <Link
             to="/products"
@@ -45,16 +49,16 @@ export const NavBar = () => {
             Shop Products
           </Link>
         </li> */}
-        {/* {isLoggedIn && (
+        {isLoggedIn !== null && (
           <li className="mr-1">
             <Link
-              // onClick={(event) => handleAnchorClick(event)}
-              to="/login"
+              onClick={() => handleLogout}
+              to="/"
               className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">
               Logout
             </Link>
           </li>
-        )} */}
+        )}
         {!isLoggedIn && (
           <>
             <li className="mr-1">
@@ -75,7 +79,7 @@ export const NavBar = () => {
         )}
 
         {/* {isLoggedIn && isAdmin && (
-      
+          
         )} */}
         {isLoggedIn && !isAdmin && (
           <li className="mr-1">

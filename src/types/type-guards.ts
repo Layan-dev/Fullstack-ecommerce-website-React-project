@@ -1,12 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { DecodedUser } from '../redux/slices/products/productSlice'
+import { DecodedUser } from '../redux/slices/products/usersSlice'
 
 export function isDecodedUser(obj: unknown): obj is DecodedUser {
   return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    'username' in obj &&
-    'role' in obj &&
-    'user_id' in obj
+    typeof obj === 'object' && obj !== null && 'role' in obj && 'email' in obj && 'userID' in obj
   )
 }

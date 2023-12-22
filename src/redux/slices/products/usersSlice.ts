@@ -51,7 +51,7 @@ export const loginThunk = createAsyncThunk(
   async (credentials: { email: string; password: string }) => {
     try {
       const res = await api.post('/api/auth/login', credentials)
-      console.log('res', res.data)
+      console.log('res from user login thunk', res.data)
       return res.data
     } catch (error) {
       console.log('err', error)
@@ -104,64 +104,6 @@ export const usersSlice = createSlice({
     userRequest: (state) => {
       state.isLoading = true
     },
-    // login: (state, action) => {
-    //   state.isLoggedIn = true
-    //   state.userData = action.payload
-    //   localStorage.setItem(
-    //     'loginData',
-    //     JSON.stringify({
-    //       isLoggedIn: state.isLoggedIn,
-    //       userData: state.userData
-    //     })
-    //   )
-    // },
-    // // logout: (state) => {
-    // //   localStorage.clear()
-    // //   state.isLoggedIn = false
-    // // },
-    // Adminlogin: (state, action: PayloadAction<User>) => {
-    //   if (state.userData?.role === 'admin') {
-    //     state.isAdmin = true
-    //     state.userData = action.payload
-    //   }
-    // },
-
-    // usersRequest: (state) => {
-    //   state.isLoading = true
-    // },
-    // usersSuccess: (state, action) => {
-    //   state.isLoading = false
-    //   state.users = action.payload
-    // },
-    addUser: (state, action) => {
-      // let's append the new product to the beginning of the array
-      state.users = [action.payload.user, ...state.users]
-    },
-    removeUser: (state, action: { payload: { userId: string } }) => {
-      const filteredItems = state.users.filter((product) => product._id !== action.payload.userId)
-      state.users = filteredItems
-    },
-    editUser: (state, action: { payload: { editedProduct: User } }) => {
-      const editedUser = action.payload.editedProduct
-
-      state.users = state.users.map((user) => (user._id === editedUser._id ? editedUser : user))
-    },
-    // updateUser: (state, action) => {
-    //   const { id, firstName, lastName } = action.payload
-    //   const foundUser = state.users.find((user) => user._id === id)
-    //   if (foundUser) {
-    //     foundUser.firstName = firstName
-    //     foundUser.lastName = lastName
-    //     state.userData = foundUser
-    //     localStorage.setItem(
-    //       'loginData',
-    //       JSON.stringify({
-    //         isLoggedIn: state.isLoggedIn,
-    //         userData: state.userData
-    //       })
-    //     )
-    //   }
-    // },
     getError: (state, action: PayloadAction<string>) => {
       state.error = action.payload
     }
@@ -180,7 +122,10 @@ export const usersSlice = createSlice({
       return state
     })
     builder.addCase(loginThunk.fulfilled, (state, action) => {
-      state.userData = action.payload.userData
+      state.userData = action.payload.user
+
+      state.isAdmin = isAdmin
+      state.isLoggedIn = true
       state.isLoading = false
       return state
     })
@@ -210,15 +155,15 @@ export const usersSlice = createSlice({
   }
 })
 export const {
-  logout,
+  logout
   // Adminlogin,
   // login,
-  removeUser,
+  // removeUser,
   // addUser,
   // usersRequest,
   // usersSuccess,
   // updateUser,
-  editUser
+  // editUser
   // logout
 } = usersSlice.actions
 

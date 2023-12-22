@@ -11,11 +11,11 @@ import { loginThunk } from '../redux/slices/products/usersSlice'
 
 export default function Login() {
   // const users = useSelector((state: RootState) => state.users.users)
-  const [errorMessage, setErrorMessage] = useState<null | string>(null)
-  const [successMessage, setSuccessMessage] = useState<null | string>(null)
-  const [loading, setloading] = useState(false)
+  // const [errorMessage, setErrorMessage] = useState<null | string>(null)
+  // const [successMessage, setSuccessMessage] = useState<null | string>(null)
+  // const [loading, setloading] = useState(false)
   const state = useSelector((state: RootState) => state)
-  const user = state.users.userData
+  // const user = state.users.userData
   const users = state.users
   const dispatch = useDispatch<AppDispatch>()
 
@@ -32,16 +32,18 @@ export default function Login() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     try {
-      setloading(true)
+      // setloading(true)
       // const res = await api.post('/api/auth/login', user)
       // console.log('res', res)
       // setSuccessMessage(res.data.msg)
-      dispatch(loginThunk(credentials)).then((res) => {
-        if (res.meta.requestStatus === 'fulfilled') {
-          console.log('is there token?', res.payload)
-          localStorage.setItem('token', res.payload.token)
-        }
-      })
+      const res = await dispatch(loginThunk(credentials))
+      console.log('is there token?', res.payload)
+      localStorage.setItem('token', res.payload.token)
+      if (res.meta.requestStatus === 'fulfilled') {
+        console.log('is there token?', res.payload)
+        localStorage.setItem('token', res.payload.token)
+      }
+
       // setErrorMessage(null)
     } catch (error) {
       // console.log('error', error)
@@ -137,7 +139,7 @@ export default function Login() {
           </div>
         </div>
         {users.error && <p className="text-red-600">{users.error}</p>}
-        {successMessage && <p className="text-green-600">{successMessage}</p>}
+        {/* {successMessage && <p className="text-green-600">{successMessage}</p>} */}
       </div>
     </section>
   )
