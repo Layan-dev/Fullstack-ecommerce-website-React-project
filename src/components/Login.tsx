@@ -13,6 +13,7 @@ import { ROLES } from '../constants'
 import { useNavigate } from 'react-router'
 import { NavBar } from './NavBar'
 import Footer from './Footer'
+import { Link } from 'react-router-dom'
 
 export default function Login() {
   // const users = useSelector((state: RootState) => state.users.users)
@@ -143,6 +144,11 @@ export default function Login() {
                   Sign up
                 </a>
               </p>
+              <Link
+                to="/forgot-password"
+                className="w-full text-black bg-success-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                {'Forgot password ?'}
+              </Link>
             </form>
             {/* {errorMessage && <div className="error-message text-red-600">{errorMessage}</div>}
             {successMessage && <div className="error-message text-green-600">{successMessage}</div>} */}

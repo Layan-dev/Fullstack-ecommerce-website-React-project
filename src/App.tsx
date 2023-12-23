@@ -18,6 +18,8 @@ import Orders from './components/Orders'
 import Register from './components/Register'
 import ActivateUser from './components/ActivateUser'
 import { PageNotFound } from './components/404'
+import { ForgotPassword } from './components/ForgotPassword'
+import { ResetPassword } from './components/ResetPassword'
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/userProfile" element={<UserProfilePage />} />
         <Route path="/user/activate/:activationToken" element={<ActivateUser />} />
+        <Route path="/reset-password/:forgotPasswordCode" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<PageNotFound />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="/admin" element={<Admin />} />
