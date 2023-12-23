@@ -10,6 +10,8 @@ import {
 import { AppDispatch, RootState } from '../redux/store'
 
 import api from '../api'
+import { NavBar } from './NavBar'
+import Footer from './Footer'
 
 export function ProductForm() {
   const dispatch = useDispatch<AppDispatch>()

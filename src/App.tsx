@@ -17,6 +17,7 @@ import UserProfilePage from './components/UserProfilePage'
 import Orders from './components/Orders'
 import Register from './components/Register'
 import ActivateUser from './components/ActivateUser'
+import { PageNotFound } from './components/404'
 
 function App() {
   return (
@@ -31,17 +32,17 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/userProfile" element={<UserProfilePage />} />
         <Route path="/user/activate/:activationToken" element={<ActivateUser />} />
-        {/* <Route element={<ProtectedRoutes />}> */}
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/Admincategoris" element={<CategoriesForm />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/addProduct" element={<ProductForm />} />
-        <Route path="/users" element={<Users />} />
-        {/* </Route> */}
+        <Route path="*" element={<PageNotFound />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/Admincategoris" element={<CategoriesForm />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/addProduct" element={<ProductForm />} />
+          <Route path="/users" element={<Users />} />
+        </Route>
       </Routes>
 
       <Footer />
-      {/* <ProductsManager /> */}
     </div>
   )
 }

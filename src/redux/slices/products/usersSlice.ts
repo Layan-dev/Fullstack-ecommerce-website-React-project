@@ -4,6 +4,8 @@ import { builtinModules } from 'module'
 import { getDecodedTokenFromStorage, getTokenFromStorage } from '../../../utils/token'
 import { ROLES } from '../../../constants'
 
+export type Role = keyof typeof ROLES
+
 export type User = {
   _id: string
   firstName: string
@@ -13,28 +15,7 @@ export type User = {
   role: Role
 }
 
-export type UserState = {
-  users: User[]
-  error: null | string
-  isLoading: boolean
-  isLoggedIn: boolean
-  isAdmin: boolean
-  userData: DecodedUser | null
-}
-export type Role = keyof typeof ROLES
 const user = getDecodedTokenFromStorage()
-const isLoggedIn = !!getTokenFromStorage()
-const decodedUser = getDecodedTokenFromStorage()
-const isAdmin = decodedUser?.role === ROLES.ADMIN
-
-const initialState: UserState = {
-  users: [],
-  error: null,
-  isLoading: false,
-  isLoggedIn,
-  isAdmin,
-  userData: decodedUser
-}
 
 export type DecodedUser = {
   firstName: string
@@ -44,6 +25,29 @@ export type DecodedUser = {
   iat: number
   role: Role
   userID: string
+}
+export type UserState = {
+  users: User[]
+  decodedUser: any
+  error: null | string
+  isLoading: boolean
+  isLoggedIn: boolean
+  isAdmin: boolean
+  userData: DecodedUser | null
+}
+
+const isLoggedIn = !!getTokenFromStorage()
+const decodedUser = getDecodedTokenFromStorage()
+const isAdmin = decodedUser?.role === ROLES.ADMIN
+
+const initialState: UserState = {
+  users: [],
+  decodedUser,
+  error: null,
+  isLoading: false,
+  isLoggedIn,
+  isAdmin,
+  userData: decodedUser
 }
 
 export const loginThunk = createAsyncThunk(
@@ -123,7 +127,6 @@ export const usersSlice = createSlice({
     })
     builder.addCase(loginThunk.fulfilled, (state, action) => {
       state.userData = action.payload.user
-
       state.isAdmin = isAdmin
       state.isLoggedIn = true
       state.isLoading = false
@@ -154,17 +157,6 @@ export const usersSlice = createSlice({
     })
   }
 })
-export const {
-  logout
-  // Adminlogin,
-  // login,
-  // removeUser,
-  // addUser,
-  // usersRequest,
-  // usersSuccess,
-  // updateUser,
-  // editUser
-  // logout
-} = usersSlice.actions
+export const { logout } = usersSlice.actions
 
 export default usersSlice.reducer

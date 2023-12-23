@@ -3,15 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { RootState } from '../redux/store'
 import { logout } from '../redux/slices/products/usersSlice'
-// import { logout } from '../redux/slices/products/usersSlice'
+import { ROLES } from '../constants'
 
 export const NavBar = () => {
-  const { isLoggedIn, isAdmin } = useSelector((state: RootState) => state.users)
+  const users = useSelector((state: RootState) => state.users)
+  const isAdmin = users.isAdmin
+  console.log('is it admin?', isAdmin)
+  const isLoggedIn = users.isLoggedIn
   const dispatch = useDispatch()
-  // const handleAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+
   function handleLogout() {
-    dispatch(logout())
+    console.log('inside logout function')
     localStorage.removeItem('token')
+    dispatch(logout())
   }
 
   //   console.log(userData?.role)
@@ -35,24 +39,11 @@ export const NavBar = () => {
             🛒
           </Link>
         </li>
-        <li className="mr-1">
-          <Link
-            to="/admin"
-            className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">
-            Admin
-          </Link>
-        </li>
-        {/* <li className="mr-1">
-          <Link
-            to="/products"
-            className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">
-            Shop Products
-          </Link>
-        </li> */}
-        {isLoggedIn !== null && (
+
+        {isLoggedIn && (
           <li className="mr-1">
             <Link
-              onClick={() => handleLogout}
+              onClick={() => handleLogout()}
               to="/"
               className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">
               Logout
@@ -78,10 +69,16 @@ export const NavBar = () => {
           </>
         )}
 
-        {/* {isLoggedIn && isAdmin && (
-          
-        )} */}
-        {isLoggedIn && !isAdmin && (
+        {isLoggedIn && isAdmin && (
+          <li className="mr-1">
+            <Link
+              to="/admin"
+              className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">
+              Admin
+            </Link>
+          </li>
+        )}
+        {isLoggedIn && isAdmin === false && (
           <li className="mr-1">
             <Link
               to="/userProfile"

@@ -13,6 +13,8 @@ import { AppDispatch, RootState } from '../redux/store'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { orderStatus } from '../constants'
+import { NavBar } from './NavBar'
+import Footer from './Footer'
 
 export default function Orders() {
   const dispatch = useDispatch<AppDispatch>()

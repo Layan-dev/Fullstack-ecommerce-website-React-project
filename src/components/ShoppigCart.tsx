@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../redux/store'
 import { removeProduct, addToCart, decreaseCart } from '../redux/slices/cartSlice'
 import { Product } from '../redux/slices/products/productSlice'
+import { NavBar } from './NavBar'
+import Footer from './Footer'
 
 export default function Cart() {
   const dispatch = useDispatch<AppDispatch>()

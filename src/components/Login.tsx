@@ -8,6 +8,11 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { AppDispatch, RootState } from '../redux/store'
 import { loginThunk } from '../redux/slices/products/usersSlice'
+import api from '../api'
+import { ROLES } from '../constants'
+import { useNavigate } from 'react-router'
+import { NavBar } from './NavBar'
+import Footer from './Footer'
 
 export default function Login() {
   // const users = useSelector((state: RootState) => state.users.users)
@@ -15,6 +20,7 @@ export default function Login() {
   // const [successMessage, setSuccessMessage] = useState<null | string>(null)
   // const [loading, setloading] = useState(false)
   const state = useSelector((state: RootState) => state)
+  const navigate = useNavigate()
   // const user = state.users.userData
   const users = state.users
   const dispatch = useDispatch<AppDispatch>()
@@ -32,18 +38,22 @@ export default function Login() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     try {
-      // setloading(true)
-      // const res = await api.post('/api/auth/login', user)
-      // console.log('res', res)
-      // setSuccessMessage(res.data.msg)
       const res = await dispatch(loginThunk(credentials))
+      const token = res.payload.token
+      const user = res.payload.userData
       console.log('is there token?', res.payload)
       localStorage.setItem('token', res.payload.token)
+      api.defaults.headers['Authorization'] = `Bearer ${token}`
       if (res.meta.requestStatus === 'fulfilled') {
         console.log('is there token?', res.payload)
         localStorage.setItem('token', res.payload.token)
       }
-
+      // if (user.role === ROLES.ADMIN) {
+      //   navigate('/admin')
+      // }
+      // if (user.role === ROLES.USER) {
+      //   navigate('/')
+      // }
       // setErrorMessage(null)
     } catch (error) {
       // console.log('error', error)

@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { RootState } from '../redux/store'
 import { usersInfoSlice } from '../redux/slices/products/userInfoSlice'
+import { NavBar } from './NavBar'
+import Footer from './Footer'
 // import { updateUser } from '../redux/slices/products/usersSlice'
 
 export default function UserProfilePage() {

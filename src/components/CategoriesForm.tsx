@@ -14,6 +14,8 @@ import {
 } from '../redux/slices/products/categoriesSlice'
 import api from '../api'
 import { Link } from 'react-router-dom'
+import { NavBar } from './NavBar'
+import Footer from './Footer'
 
 export default function CategoriesForm() {
   const dispatch = useDispatch<AppDispatch>()

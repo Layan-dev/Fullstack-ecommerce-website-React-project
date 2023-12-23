@@ -6,6 +6,8 @@ import React, { ChangeEvent, FormEvent, useState } from 'react'
 import api from '../api'
 import { Link } from 'react-router-dom'
 import { AxiosError } from 'axios'
+import { NavBar } from './NavBar'
+import Footer from './Footer'
 
 export default function Regeregister() {
   // const users = useSelector((state: RootState) => state.users.users)

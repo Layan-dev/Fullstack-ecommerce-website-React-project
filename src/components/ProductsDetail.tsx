@@ -5,6 +5,8 @@ import { addToCart } from '../redux/slices/cartSlice'
 import { useEffect } from 'react'
 import { productsRequest, singleProductsSuccess } from '../redux/slices/products/productSlice'
 import api from '../api'
+import { NavBar } from './NavBar'
+import Footer from './Footer'
 
 export default function ProductsDetail() {
   // const dispatch = useDispatch()

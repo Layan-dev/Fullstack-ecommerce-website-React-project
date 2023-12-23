@@ -14,6 +14,8 @@ import {
 } from '../redux/slices/products/usersSlice'
 import { ChangeEvent, useEffect } from 'react'
 import { ROLES } from '../constants'
+import Footer from './Footer'
+import { NavBar } from './NavBar'
 
 export default function Users() {
   const dispatch = useDispatch<AppDispatch>()
