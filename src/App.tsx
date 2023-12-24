@@ -32,7 +32,7 @@ function App() {
         <Route path="/cart" element={<ShoppigCart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/userProfile/:id" element={<UserProfilePage />} />
+        <Route path="/USER/:id" element={<UserProfilePage />} />
         <Route path="/user/activate/:activationToken" element={<ActivateUser />} />
         <Route path="/reset-password/:forgotPasswordCode" element={<ResetPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

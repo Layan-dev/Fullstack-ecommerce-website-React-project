@@ -15,7 +15,7 @@ import {
 
 export default function UserProfilePage() {
   const users = useSelector((state: RootState) => state.users)
-  const userData = useSelector((state: RootState) => users.userData)
+  const userData = users.userData
   const isLoading = useSelector((state: RootState) => state.userInfo.isLoading)
   const error = useSelector((state: RootState) => state.userInfo.error)
   const { id } = useParams()
@@ -69,12 +69,7 @@ export default function UserProfilePage() {
     e.preventDefault()
     try {
       if (user._id) {
-        dispatch(getSingleUserThunk(user._id)).then(() => {
-          // After getting the user, dispatch updateUserProfileThunk to update the user profile
-          if (user != undefined) {
-            dispatch(updateUserProfileThunk({ userId: user._id, updatedUser: user }))
-          }
-        })
+        dispatch(updateUserProfileThunk({ userId: user._id, updatedUser: user }))
       }
     } catch (error) {
       console.log(error)
@@ -82,43 +77,116 @@ export default function UserProfilePage() {
     console.log(user)
   }
   return (
-    <div>
-      <div>
-        <h2>
-          <b>
-            Hello,{userData?.firstName}
-            {userData?.lastName}
-          </b>
+    <div style={{ backgroundColor: '' }}>
+      <div className="max-w-lg mx-auto my-10 bg-white rounded-lg shadow-md p-5">
+        <img
+          className="w-32 h-32 rounded-full mx-auto"
+          src="https://picsum.photos/200"
+          alt="Profile picture"
+        />
+        <h2 className="text-center text-2xl font-semibold mt-3">
+          {user?.firstName}
+          {user?.lastName}{' '}
+          <button
+            onClick={handleFormOpen}
+            type="button"
+            className="px-3 py-2 text-xs font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            Edit
+          </button>{' '}
         </h2>
+
+        <p className="text-center text-gray-600 mt-1">{userData?.email}</p>
+
+        <div className="flex justify-center mt-5"></div>
+
+        {isFormOpen && (
+          <form className="w-full max-w-lg flex" onSubmit={handleSubmit}>
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="grid-first-name">
+                  First Name
+                </label>
+                <input
+                  value={user.firstName}
+                  onChange={handleChange}
+                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  id="grid-first-name"
+                  name="firstName"
+                  type="text"
+                />
+              </div>
+              <div className="w-full md:w-1/2 px-3">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="grid-last-name">
+                  Last Name
+                </label>
+                <input
+                  value={user.lastName}
+                  onChange={handleChange}
+                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="grid-last-name"
+                  name="lastName"
+                  type="text"
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                className="px-3 py-2 text-xs font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-6 ml-5">
+                Update Profile
+              </button>
+            </div>
+          </form>
+        )}
       </div>
-      <div>
-        <b>Name:</b>
-        {userData?.firstName}
-        {userData?.lastName}
-        <button onClick={handleFormOpen}>Edit</button>
-      </div>
-      <div>
-        <h2>
-          <b> ID:</b>
-          {userData?.userID}
-        </h2>
-        <h2>
-          <b>Email:</b>
-          {userData?.email}
-        </h2>
-      </div>
-      {isFormOpen && (
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="firstName"
-            value={user.firstName}
-            onChange={handleChange}></input>
-          <input type="text" name="lastName" value={user.lastName} onChange={handleChange}></input>
-          <button type="submit">Update profile</button>
-        </form>
-      )}
     </div>
+
+    // <div>
+    //   <div>
+    //     <h2>
+    //       <b>
+    //         Hello,{userData?.firstName}
+    //         {userData?.lastName}
+    //       </b>
+    //     </h2>
+    //   </div>
+    //   <div>
+    //     <b>Name:</b>
+    //     {userData?.firstName}
+    //     {userData?.lastName}
+    //     <button type="button" onClick={handleFormOpen}>
+    //       Edit
+    //     </button>
+    //   </div>
+    //   <div>
+    //     <h2>
+    //       <b> ID:</b>
+    //       {userData?.userID}
+    //     </h2>
+    //     <h2>
+    //       <b>Email:</b>
+    //       {userData?.email}
+    //     </h2>
+    //   </div>
+    //   {isFormOpen && (
+    //     <form onSubmit={handleSubmit}>
+    //       <input
+    //         type="text"
+    //         name="firstName"
+    //         value={user.firstName}
+    //         onChange={handleChange}></input>
+    //       <input type="text" name="lastName" value={user.lastName} onChange={handleChange}></input>
+    //       <button type="submit">Update profile</button>
+    //     </form>
+    //   )}
+    // </div>
+
     // <div className="flex items-center justify-center min-h-screen from-gray-700 via-gray-800 to-gray-900 bg-gradient-to-br">
     //   <div className="relative w-full group max-w-md min-w-0 mx-auto mt-6 mb-6 break-words bg-white border shadow-2xl dark:bg-gray-800 dark:border-gray-700 md:max-w-sm rounded-xl">
     //     <div className="pb-6">

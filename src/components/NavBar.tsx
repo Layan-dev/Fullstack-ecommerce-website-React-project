@@ -81,7 +81,7 @@ export const NavBar = () => {
         {isLoggedIn && isAdmin === false && (
           <li className="mr-1">
             <Link
-              to="/userProfile"
+              to={`/${users.decodedUser.role}/${users.decodedUser.userID}`}
               className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold">
               My Account
             </Link>
