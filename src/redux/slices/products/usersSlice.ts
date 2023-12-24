@@ -96,6 +96,30 @@ export const grantRoleUserThunk = createAsyncThunk(
   }
 )
 
+export const updateUserProfileThunk = createAsyncThunk(
+  'singleUser/edit',
+  async ({ userId, updatedUser }: { userId: User['_id']; updatedUser: Partial<User> }) => {
+    try {
+      console.log('first')
+      const res = await api.put(`/api/users/profile/${userId}`, updatedUser)
+      const data = res.data
+      console.log('res', res.data)
+      console.log('updated User', updatedUser)
+      return { data, updatedUser }
+    } catch (error) {
+      console.log('👀 ', error)
+    }
+  }
+)
+export const getSingleUserThunk = createAsyncThunk('user/get', async (userId: string) => {
+  try {
+    const res = await api.get(`/api/users/${userId}`)
+    console.log(res)
+    return res.data
+  } catch (error) {
+    console.log(error)
+  }
+})
 export const usersSlice = createSlice({
   name: 'users',
   initialState,
@@ -110,6 +134,16 @@ export const usersSlice = createSlice({
     },
     getError: (state, action: PayloadAction<string>) => {
       state.error = action.payload
+    },
+    updateUserFromPayload: (state, action) => {
+      const updatedUser = action.payload
+      if (updatedUser) {
+        const updatedUsers = state.users.map((user) =>
+          user._id === updatedUser._id ? updatedUser : user
+        )
+        state.users = updatedUsers
+        state.userData = updatedUser
+      }
     }
   },
   extraReducers: (builder) => {
@@ -155,8 +189,19 @@ export const usersSlice = createSlice({
       state.users = updatedUsers
       return state
     })
+    builder.addCase(updateUserProfileThunk.fulfilled, (state, action) => {
+      const updatedUser = action.payload?.updatedUser
+      const userId = updatedUser?._id
+      if (updatedUser) {
+        const updatedUsers = state.users.map((user) =>
+          user._id === userId ? { ...user, ...updatedUser } : user
+        )
+        state.users = updatedUsers
+        state.userData = { ...updatedUser } as DecodedUser
+      }
+    })
   }
 })
-export const { logout } = usersSlice.actions
+export const { logout, updateUserFromPayload } = usersSlice.actions
 
 export default usersSlice.reducer

@@ -11,8 +11,6 @@ import {
 import { Link, useSearchParams } from 'react-router-dom'
 import CategoriesComponent from './CategoriesComponent'
 import { addToCart } from '../redux/slices/cartSlice'
-import { NavBar } from './NavBar'
-import Footer from './Footer'
 // import { getPagesThunk } from '../redux/slices/products/paginationSlice'
 
 export default function Products() {
@@ -167,7 +165,6 @@ export default function Products() {
           </select>
         </form>
       </div>
-      ;
       <CategoriesComponent />
       <section
         id="Projects"

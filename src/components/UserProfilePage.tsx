@@ -2,31 +2,38 @@ import axios from 'axios'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { RootState } from '../redux/store'
+import { AppDispatch, RootState } from '../redux/store'
 import { usersInfoSlice } from '../redux/slices/products/userInfoSlice'
-import { NavBar } from './NavBar'
-import Footer from './Footer'
+import { useParams } from 'react-router'
+import {
+  getSingleUserThunk,
+  updateUserFromPayload,
+  updateUserProfileThunk
+} from '../redux/slices/products/usersSlice'
+
 // import { updateUser } from '../redux/slices/products/usersSlice'
 
 export default function UserProfilePage() {
-  const url = '/mock/e-commerce/users.json'
-  const users = useSelector((state: RootState) => state.userInfo.userData)
+  const users = useSelector((state: RootState) => state.users)
+  const userData = useSelector((state: RootState) => users.userData)
   const isLoading = useSelector((state: RootState) => state.userInfo.isLoading)
   const error = useSelector((state: RootState) => state.userInfo.error)
+  const { id } = useParams()
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [user, setUser] = useState({ firstName: users?.firstName, lastName: users?.lastName })
-  const dispatch = useDispatch()
+  const [user, setUser] = useState({
+    _id: '',
+    firstName: '',
+    lastName: ''
+  })
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    function fetchData() {
-      axios
-        .get(url)
-        .then((response) => dispatch(usersInfoSlice.actions.usersSuccess(response.data)))
-        .catch((error) => console.log(usersInfoSlice.actions.getError(error.message)))
+    handleGetUsers()
+    if (userData) {
+      setUser({ firstName: userData.firstName, lastName: userData.lastName, _id: userData.userID })
     }
+  }, [])
 
-    fetchData()
-  }, [dispatch])
   if (isLoading === true) {
     return <p>loading...</p>
   }
@@ -35,6 +42,21 @@ export default function UserProfilePage() {
     return <div> {error}</div>
   }
 
+  const handleGetUsers = async () => {
+    if (id) {
+      dispatch(getSingleUserThunk(id))
+        .then((response) => {
+          const productData = response.payload
+          console.log('productData', productData)
+
+          setUser(productData)
+          dispatch(updateUserFromPayload(productData))
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+  }
   const handleFormOpen = () => {
     setIsFormOpen(!isFormOpen)
   }
@@ -45,8 +67,18 @@ export default function UserProfilePage() {
   }
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    const updateUserData = { id: users?.userID, ...user }
-    // dispatch(updateUser(updateUserData))
+    try {
+      if (user._id) {
+        dispatch(getSingleUserThunk(user._id)).then(() => {
+          // After getting the user, dispatch updateUserProfileThunk to update the user profile
+          if (user != undefined) {
+            dispatch(updateUserProfileThunk({ userId: user._id, updatedUser: user }))
+          }
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
     console.log(user)
   }
   return (
@@ -54,25 +86,25 @@ export default function UserProfilePage() {
       <div>
         <h2>
           <b>
-            Hello,{users?.firstName}
-            {users?.lastName}
+            Hello,{userData?.firstName}
+            {userData?.lastName}
           </b>
         </h2>
       </div>
       <div>
         <b>Name:</b>
-        {users?.firstName}
-        {users?.lastName}
+        {userData?.firstName}
+        {userData?.lastName}
         <button onClick={handleFormOpen}>Edit</button>
       </div>
       <div>
         <h2>
           <b> ID:</b>
-          {users?.userID}
+          {userData?.userID}
         </h2>
         <h2>
           <b>Email:</b>
-          {users?.email}
+          {userData?.email}
         </h2>
       </div>
       {isFormOpen && (
