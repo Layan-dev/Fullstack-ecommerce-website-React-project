@@ -6,7 +6,8 @@ import {
   getProductsRequestThunk,
   getProductsThunk,
   getSearchByNameThunk,
-  getSortProductThunk
+  getSortProductThunk,
+  getfilterByCategoryThunk
 } from '../redux/slices/products/productSlice'
 import { Link, useSearchParams } from 'react-router-dom'
 import CategoriesComponent from './CategoriesComponent'
@@ -18,17 +19,19 @@ export default function Products() {
   const currentItems = state.products.items
   const isLoading = state.products.isLoading
   const error = state.products.error
-  // const selectedCategoryOp = state.category.selectedCategory
+  const selectedCategoryOp = state.category.selectedCategory
+  console.log('this is selectedCategoryOp', selectedCategoryOp)
 
   // const [currentPage, setCurrentPage] = useState(1)
   const [searchParams, setSearchParams] = useSearchParams()
-  const page = searchParams.get('pageNumber') || 0
-  const name = searchParams.get('name') || ''
+  const page = searchParams.get('pageNumber') || 1
+  const name = searchParams.get('search') || ''
   const sortOrder = searchParams.get('sortOrder') || ''
+  const categoryId = searchParams.get('categoryId') || ''
   // const sortField = searchParams.get('sortField') || ''
-  console.log('searchParams', searchParams.get('pageNumber'))
+  console.log('searchParams page num', searchParams.get('pageNumber'))
+  console.log('searchParams cat', searchParams.get('categoryId'))
   console.log('')
-  const [search, setSearch] = useState('')
   const pagination = {
     pageNumber: state.products.pageNumber,
     // perPage: state.products.perPage,
@@ -39,24 +42,18 @@ export default function Products() {
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    if (page && sortOrder) {
+    if (page && categoryId) {
+      handleGetByCatd(pagination.pageNumber, categoryId)
+    } else if (page && sortOrder) {
       handleSortProduct(pagination.pageNumber, sortOrder)
     } else if (page && name) {
       handleGetProductsByName(name, pagination.pageNumber)
-    } else if (page) {
-      handleGetProductsByNextPage(pagination.pageNumber)
+    } else if (page || name || sortOrder || categoryId) {
+      handleGetProductsByName(name, pagination.pageNumber)
     } else {
       dispatch(getProductsThunk())
     }
   }, [])
-
-  // useEffect(() => {
-  //   if (page) {
-  //     handleGetProductsByNextPage(Number(pagination.pageNumber))
-  //   } else {
-  //     dispatch(getProductsThunk())
-  //   }
-  // }, [])
 
   if (isLoading === true) {
     return <p>loading...</p>
@@ -70,78 +67,47 @@ export default function Products() {
   console.log('filtered products', filteredProducts)
   const totalPages = pagination.totalPages
 
-  // const handlePageChange = (pageNumber: number) => {
-  //   setCurrentPage(pageNumber)
-  // }
   const handleGetProductsByName = async (search: string, selectedPage: number) => {
-    dispatch(getSearchByNameThunk({ search, selectedPage: selectedPage.toString() }))
-    setSearchParams({ pageNumber: selectedPage.toString() })
+    searchParams.set('search', search)
+    searchParams.set('pageNumber', selectedPage.toString())
+    setSearchParams(searchParams)
+
+    dispatch(getProductsRequestThunk(searchParams.toString()))
   }
+
   const handleGetProductsByNextPage = async (selectedPage: number) => {
-    dispatch(getProductsRequestThunk(selectedPage.toString()))
-    setSearchParams({ pageNumber: selectedPage.toString(), name })
+    searchParams.set('pageNumber', selectedPage.toString())
+    setSearchParams(searchParams)
+
+    dispatch(getProductsRequestThunk(searchParams.toString()))
   }
+
+  const handleGetByCatd = async (selectedPage: number, categoryId: string) => {
+    console.log('i am in category')
+
+    searchParams.set('sortOrder', sortOrder)
+    searchParams.set('categoryId', categoryId)
+    searchParams.set('pageNumber', selectedPage.toString())
+    setSearchParams(searchParams)
+
+    dispatch(getProductsRequestThunk(searchParams.toString()))
+  }
+
   const handleSortProduct = async (selectedPage: number, sortOrder: string) => {
-    dispatch(getSortProductThunk({ selectedPage: selectedPage.toString(), sortOrder: sortOrder }))
-    setSearchParams({ pageNumber: selectedPage.toString(), sortOrder: sortOrder })
+    searchParams.set('sortOrder', sortOrder)
+    searchParams.set('pageNumber', selectedPage.toString())
+    setSearchParams(searchParams)
+    dispatch(getProductsRequestThunk(searchParams.toString()))
   }
 
   const handleSearch = async (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value)
-    setSearchParams({ name: e.target.value, selectedPage: pagination.pageNumber.toString() })
-    await dispatch(
-      getSearchByNameThunk({
-        search: e.target.value,
-        selectedPage: pagination.pageNumber.toString()
-      })
-    )
+    handleGetProductsByName(e.target.value, pagination.pageNumber)
     console.log('search', e.target.value)
   }
   const handleSortOrder = async (e: ChangeEvent<HTMLSelectElement>) => {
-    setSearchParams({
-      pageNumber: pagination.pageNumber.toString(),
-      sortOrder: e.target.value
-    })
     // Dispatch the sortProducts action
-    await dispatch(
-      getSortProductThunk({
-        selectedPage: pagination.pageNumber.toString(),
-        sortOrder: e.target.value
-      })
-    )
+    handleSortProduct(pagination.pageNumber, e.target.value)
   }
-  // const handleSortField = async (e: ChangeEvent<HTMLSelectElement>) => {
-  //   setSearchParams({
-  //     sortField: e.target.value,
-  //     sortOrder: sortOrder,
-  //     pageNumber: pagination.pageNumber.toString(),
-  //     name
-  //   })
-  //   // Dispatch the sortProducts action
-  //   await dispatch(
-  //     getSortProductThunk({
-  //       sortField: e.target.value,
-  //       selectedPage: pagination.pageNumber.toString()
-  //     })
-  //   )
-  // }
-
-  // const handleSortOrder =  (e: ChangeEvent<HTMLSelectElement>) => {
-  //   setSearchParams({
-  //     sortOrder: e.target.value,
-  //     pageNumber: pagination.pageNumber.toString(),
-  //     name
-  //   })
-  //   await dispatch(
-  //     getSortProductThunk({
-  //       sortField: e.target.value,
-  //       sortOrder: sortOrder,
-  //       selectedPage: pagination.pageNumber.toString()
-  //     })
-  //   )
-  // }
-
-  // console.log('search local state', search)
 
   return (
     <div>
@@ -152,20 +118,25 @@ export default function Products() {
             title="search"
             id="outlined-basic"
             placeholder="search by company name"
+            value={name}
             onChange={handleSearch}
           />
           {/* <select name="sortField" title="sort Field" onChange={(e) => handleSortField(e)}>
             <option>Select option</option>
             <option> price</option>
           </select> */}
-          <select name="sortOrder" title="sort Order" onChange={(e) => handleSortOrder(e)}>
+          <select
+            name="sortOrder"
+            title="sort Order"
+            onChange={(e) => handleSortOrder(e)}
+            value={sortOrder}>
             <option>Select option</option>
             <option>dec</option>
             <option>asc</option>
           </select>
         </form>
       </div>
-      <CategoriesComponent />
+      <CategoriesComponent searchParams={searchParams} setSearchParams={setSearchParams} />
       <section
         id="Projects"
         className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">
@@ -219,7 +190,9 @@ export default function Products() {
             className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             key={pageNumber}
             onClick={() => {
-              if (sortOrder) {
+              if (categoryId) {
+                handleGetByCatd(pageNumber, categoryId)
+              } else if (sortOrder) {
                 handleSortProduct(pageNumber, sortOrder)
               } else if (name) {
                 handleGetProductsByName(name, pageNumber)
@@ -233,23 +206,4 @@ export default function Products() {
       </div>
     </div>
   )
-  // const filterProductByCategory = (selectedCategoryOp: string) => {
-  //   return selectedCategoryOp !== ''
-  //     ? products.filter((product) => {
-  //         return product.category.find((cat) => cat._id === selectedCategoryOp)
-  //         // return product
-  //         // console.log('this is selected categopry op', selectedCategoryOp)
-  //         // console.log('this is products', product)
-  //       })
-  //     : products
-  // }
-
-  // const itemsPerPage = pagination.perPage
-
-  // if ((search, page)) {
-  //   handleGetProductsByName(search, pagination.pageNumber)
-  // }
-  // .filter((product) => {
-  //   return search.toLocaleLowerCase() === '' ? product : product.name.includes(search)
-  // })
 }

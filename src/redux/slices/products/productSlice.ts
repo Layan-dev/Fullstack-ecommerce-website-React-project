@@ -45,35 +45,42 @@ export const getProductsThunk = createAsyncThunk('products/get', async () => {
     console.log('err', error)
   }
 })
-export const getProductsRequestThunk = createAsyncThunk(
-  'request/get',
-  async (selectedPage: string) => {
-    try {
-      const res = await api.get(`/api/products?pageNumber=${selectedPage}`)
-      console.log('res from requst products thunk', res.data)
-      return res.data
-    } catch (error) {
-      console.log('err', error)
-    }
+export const getProductsRequestThunk = createAsyncThunk('request/get', async (params: string) => {
+  try {
+    console.log('==', params)
+    const res = await api.get(`/api/products?${params}`)
+    console.log('res from requst products thunk', res.data)
+    return res.data
+  } catch (error) {
+    console.log('err', error)
   }
-)
-export const getSearchByNameThunk = createAsyncThunk(
-  'search/get',
-  async ({ search, selectedPage }: { search: string; selectedPage: string }) => {
-    try {
-      const res = await api.get(`/api/products?search=${search}&pageNumber=${selectedPage}`)
-      console.log('res from serach products thunk', res.data)
-      return res.data
-    } catch (error) {
-      console.log('err', error)
-    }
+})
+export const getSearchByNameThunk = createAsyncThunk('search/get', async (params: string) => {
+  try {
+    const res = await api.get(`/api/products?${params}`)
+    console.log('res from serach products thunk', res.data)
+    return res.data
+  } catch (error) {
+    console.log('err', error)
   }
-)
+})
 export const getSortProductThunk = createAsyncThunk(
   'sort/get',
   async ({ sortOrder, selectedPage }: { sortOrder: string; selectedPage: string }) => {
     try {
       const res = await api.get(`/api/products?pageNumber=${selectedPage}&sortOrder=${sortOrder}`)
+      console.log('res from sort products thunk', res.data)
+      return res.data
+    } catch (error) {
+      console.log('err', error)
+    }
+  }
+)
+export const getfilterByCategoryThunk = createAsyncThunk(
+  'categoryId/get',
+  async ({ categoryId, selectedPage }: { categoryId: string; selectedPage: string }) => {
+    try {
+      const res = await api.get(`/api/products?pageNumber=${selectedPage}&categoryId=${categoryId}`)
       console.log('res from sort products thunk', res.data)
       return res.data
     } catch (error) {
@@ -196,6 +203,15 @@ export const productSlice = createSlice({
       return state
     })
     builder.addCase(getSortProductThunk.fulfilled, (state, action) => {
+      state.items = action.payload?.products
+      state.pageNumber = action.payload?.pageNumber
+      state.perPage = action.payload?.perPage
+      state.totalPages = action.payload?.totalPages
+      state.totalProducts = action.payload?.totalProducts
+      state.isLoading = false
+      return state
+    })
+    builder.addCase(getfilterByCategoryThunk.fulfilled, (state, action) => {
       state.items = action.payload?.products
       state.pageNumber = action.payload?.pageNumber
       state.perPage = action.payload?.perPage

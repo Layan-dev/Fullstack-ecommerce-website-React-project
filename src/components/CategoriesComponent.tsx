@@ -2,22 +2,28 @@ import axios from 'axios'
 import React, { useEffect } from 'react'
 import { Category, removeCategory, categoriesSlice } from '../redux/slices/products/categoriesSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../redux/store'
-import { Link } from 'react-router-dom'
+import { AppDispatch, RootState } from '../redux/store'
+import { SetURLSearchParams } from 'react-router-dom'
+import {
+  getProductsRequestThunk,
+  getfilterByCategoryThunk
+} from '../redux/slices/products/productSlice'
 
-// const type Prop={
-//   setSelected=React.Dispatch<React.SetStateAction<Categories | null | undefined>>
-// }
-export default function CategoriesComponent() {
+type Props = {
+  searchParams: URLSearchParams
+  setSearchParams: SetURLSearchParams
+}
+export default function CategoriesComponent({ searchParams, setSearchParams }: Props) {
   const categoriesUrl = 'http://localhost:5050/api/categories/'
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
+  const state = useSelector((state: RootState) => state)
   const categories = useSelector((state: RootState) => state.category.items)
+  const selectedCategoryId = searchParams.get('categoryId') || ''
 
   useEffect(() => {
     function fetchCategories() {
       axios
         .get(categoriesUrl)
-        // .then((response) => console.log(categoriesSlice.actions.categorySuccess(response.data)))
         .then((response) => dispatch(categoriesSlice.actions.categorySuccess(response.data)))
         .catch((error) => console.log(categoriesSlice.actions.getError(error.message)))
     }
@@ -25,11 +31,10 @@ export default function CategoriesComponent() {
   }, [dispatch])
 
   const handleSelectedCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log('this is categories', categories)
-    const selectedop = categories.find((x) => x._id === event.target.value)
-    console.log('this is selected cat', selectedop)
-    if (selectedop != undefined)
-      dispatch(categoriesSlice.actions.setSelectedCategory(selectedop._id))
+    console.log('this is categories', event.target.value)
+    searchParams.set('categoryId', event.target.value)
+    setSearchParams(searchParams)
+    dispatch(getProductsRequestThunk(searchParams.toString()))
   }
 
   return (
@@ -37,7 +42,8 @@ export default function CategoriesComponent() {
       Categories
       <label>
         filter by category
-        <select onChange={handleSelectedCategory}>
+        <select onChange={handleSelectedCategory} value={selectedCategoryId}>
+          <option>select </option>
           {categories.map((category: Category) => {
             return (
               <option key={category._id} value={category._id}>
