@@ -4,10 +4,6 @@ import { ProductForm } from './ProductForm'
 import { isExpired } from '../utils/token'
 
 export default function Admin() {
-  // const isTokenExpired = isExpired()
-  // if (isTokenExpired) {
-  //   return <Navigate to="/" />
-  // }
   return (
     <div>
       <div className="flex">
