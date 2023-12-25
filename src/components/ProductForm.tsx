@@ -5,17 +5,15 @@ import Select, { MultiValue } from 'react-select'
 import {
   Product,
   deleteProductThunk,
-  getProductsThunk,
   editProductThunk,
   getProductsRequestThunk
 } from '../redux/slices/products/productSlice'
 import { AppDispatch, RootState } from '../redux/store'
 
 import api from '../api'
-import { NavBar } from './NavBar'
-import Footer from './Footer'
+
 import axios from 'axios'
-import { Category, categoriesSlice } from '../redux/slices/products/categoriesSlice'
+import { categoriesSlice } from '../redux/slices/products/categoriesSlice'
 
 type Option = { value: string; label: string }
 

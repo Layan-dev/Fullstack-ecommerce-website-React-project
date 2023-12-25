@@ -124,17 +124,16 @@ export default function Cart() {
                 <p className="text-gray-700">Subtotal</p>
                 <p className="text-gray-700">{newTotalAmount} SAR </p>
               </div>
-              <div className="flex justify-between">
+              {/* <div className="flex justify-between">
                 <p className="text-gray-700">Shipping</p>
                 <p className="text-gray-700">$20</p>
-              </div>
+              </div> */}
               <hr className="my-4" />
               <div className="flex justify-between">
                 <p className="text-lg font-bold">Total</p>
                 <div className="">
-                  {/* <p className="mb-1 text-lg font-bold">{newTotalAmount + shipping}</p> */}
+                  <p className="mb-1 text-lg font-bold">{newTotalAmount}</p>
                   {/*change cartItems.price*item.cartQuantity + 20 */}
-                  <p className="text-sm text-gray-700">including VAT</p>
                 </div>
               </div>
               <button

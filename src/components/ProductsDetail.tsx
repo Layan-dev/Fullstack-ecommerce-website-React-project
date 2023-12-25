@@ -1,21 +1,17 @@
 import { useParams } from 'react-router'
-import { RootState } from '../redux/store'
+import { AppDispatch, RootState } from '../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { productsRequest, singleProductsSuccess } from '../redux/slices/products/productSlice'
 import api from '../api'
-import { NavBar } from './NavBar'
-import Footer from './Footer'
+import { addToCartThunk } from '../redux/slices/cartSlice'
 
 export default function ProductsDetail() {
-  // const dispatch = useDispatch()
-  // const { id } = useParams()
-  const selectedProduct = useSelector((state: RootState) => state.products.selectedProduct)
-  // const url = "/mock/e-commerce/products.json/"+ `${id}`
-  // const productDetail = useSelector((state: RootState) =>
-  //   state.products.items.find((prod) => prod._id.toString() === id)
-  // )
-  const dispatch = useDispatch()
+  const state = useSelector((state: RootState) => state)
+  const selectedProduct = state.products.selectedProduct
+  const cartItems = state.cart.cartItems
+  const userId = state.users.decodedUser.userID
+  const dispatch = useDispatch<AppDispatch>()
   const { id } = useParams()
 
   useEffect(() => {
@@ -31,6 +27,15 @@ export default function ProductsDetail() {
     } catch (error) {
       // Handle error
     }
+  }
+  const handleIncrement = (productId: string) => {
+    dispatch(
+      addToCartThunk({
+        productIds: [productId],
+        cartId: cartItems?._id || '',
+        userId
+      })
+    )
   }
 
   if (!selectedProduct) {
@@ -94,7 +99,7 @@ export default function ProductsDetail() {
               <div className="flex flex-wrap items-center -mx-4 ">
                 <div className="w-full px-4 mb-4 lg:w-1/2 lg:mb-0">
                   <button
-                    onClick={() => null}
+                    onClick={() => handleIncrement(selectedProduct._id)}
                     className="flex items-center justify-center w-full p-4 text-blue-500 border border-blue-500 rounded-md dark:text-gray-200 dark:border-blue-600 hover:bg-blue-600 hover:border-blue-600 hover:text-gray-100 dark:bg-blue-600 dark:hover:bg-blue-700 dark:hover:border-blue-700 dark:hover:text-gray-300">
                     Add to Cart
                   </button>
