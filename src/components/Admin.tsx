@@ -1,7 +1,6 @@
-import { Link, Navigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { ProductForm } from './ProductForm'
-import { isExpired } from '../utils/token'
 
 export default function Admin() {
   return (
