@@ -1,29 +1,51 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Select, { MultiValue } from 'react-select'
 
 import {
   Product,
   deleteProductThunk,
   getProductsThunk,
-  editProductThunk
+  editProductThunk,
+  getProductsRequestThunk
 } from '../redux/slices/products/productSlice'
 import { AppDispatch, RootState } from '../redux/store'
 
 import api from '../api'
 import { NavBar } from './NavBar'
 import Footer from './Footer'
+import axios from 'axios'
+import { categoriesSlice } from '../redux/slices/products/categoriesSlice'
+
+type Option = { value: string; label: string }
 
 export function ProductForm() {
   const dispatch = useDispatch<AppDispatch>()
   const state = useSelector((state: RootState) => state)
   const products = state.products.items
+  const categories = state.category.items
 
+  const [selectedOption, setSelectedOption] = useState<MultiValue<Option>>([])
+  const selectedCategoryIds = selectedOption.map((option) => option.value)
+
+  console.log(selectedOption)
+  console.log(selectedCategoryIds)
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
   const [successMessage, setSuccessMessage] = useState<null | string>(null)
   const [loading, setloading] = useState(false)
 
   useEffect(() => {
-    dispatch(getProductsThunk())
+    function fetchCategories() {
+      const categoriesUrl = 'http://localhost:5050/api/categories/'
+
+      axios
+        .get(categoriesUrl)
+        .then((response) => dispatch(categoriesSlice.actions.categorySuccess(response.data)))
+        .catch((error) => console.log(categoriesSlice.actions.getError(error.message)))
+    }
+
+    dispatch(getProductsRequestThunk('perPage=1000'))
+    fetchCategories()
   }, [])
 
   const handleDeleteProduct = (id: string) => {
@@ -68,16 +90,17 @@ export function ProductForm() {
     e.preventDefault()
     try {
       if (selectedProduct && selectedProduct._id) {
-        const updatedProduct = { ...selectedProduct }
+        const updatedProduct = { ...selectedProduct, category: selectedCategoryIds }
         console.log('i am here')
         console.log(updatedProduct)
-        dispatch(
-          editProductThunk({ productId: selectedProduct._id, updatedProduct: selectedProduct })
-        )
+        dispatch(editProductThunk({ productId: selectedProduct._id, updatedProduct }))
+        setSelectedProduct(null)
+        setSelectedOption([])
       } else {
-        const res = await api.post('/api/products', product)
+        const res = await api.post('/api/products', { ...product, category: selectedCategoryIds })
         console.log('res', res)
         console.log('products', products)
+        setSelectedOption([])
         setSuccessMessage(res.data.msg)
         setErrorMessage(null)
       }
@@ -91,39 +114,22 @@ export function ProductForm() {
       setloading(false)
     }
   }
-  // const handleSubmit = async (event: FormEvent) => {
-  //   event.preventDefault()
-  //   try {
-  //     setloading(true)
-  //     const res = await api.post('/api/auth/register', user)
-  //     console.log('res', res)
-  //     setSuccessMessage(res.data.msg)
-  //     setErrorMessage(null)
-  //   } catch (error) {
-  //     console.log('error', error)
-  //     if (error instanceof AxiosError) {
-  //       setErrorMessage(error.response?.data)
-  //       setSuccessMessage(null)
-  //     }
-  //   } finally {
-  //     setloading(false)
-  //   }
-
-  //fetching data of products
-  // const handleGetProducts = async () => {
-  //   dispatch(productsRequest())
-
-  //   const res = await api.get('api/products/')
-  //   dispatch(productsSuccess(res.data))
-  //   console.log(res.data)
-  // }
 
   const handleEditBtnClick = (item: Product) => {
     setSelectedProduct(item)
+    const options = item.category.map((cat) => ({
+      value: cat._id,
+      label: cat.name
+    }))
+    setSelectedOption(options)
   }
+  const options = categories.map((cat) => ({
+    value: cat._id,
+    label: cat.name
+  }))
 
   return (
-    <div className="w-3/4 bg-white p-4">
+    <div className="w-full bg-white p-4">
       <div className=" rounded-lg overflow-hidden mx-4 md:mx-10">
         <div className="flex flex-1 items-center justify-center p-6">
           {errorMessage && <div className="error-message text-red-600">{errorMessage}</div>}
@@ -167,19 +173,26 @@ export function ProductForm() {
                 />
               </div>
               <div className="mr-2">
-                <input
+                <Select
+                  defaultValue={selectedOption}
+                  value={selectedOption}
+                  onChange={setSelectedOption}
+                  options={options}
+                  isMulti
+                />
+                {/* <input
                   type="text"
                   name="category"
                   id="category"
                   value={
                     selectedProduct
-                      ? selectedProduct.category.join(',')
+                      ? selectedProduct.category.map((cat) => cat.name).join(',')
                       : product.category.join(',')
                   }
                   onChange={handleChange}
                   className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-3 leading-5 placeholder-gray-500 focus:border-gray-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm"
                   placeholder="Categories"
-                />
+                /> */}
               </div>
             </div>
 
@@ -271,11 +284,13 @@ export function ProductForm() {
                 </td>
                 <td className="py-4 px-6 border-b border-gray-200">{item.name}</td>
                 <td className="py-4 px-6 border-b border-gray-200">{item.description}</td>
-                {item.category.map((category) => (
-                  <td key={category._id} className="py-4 px-6 border-b border-gray-200">
-                    {category.name}
-                  </td>
-                ))}
+                <td className="py-4 px-6 border-b border-gray-200">
+                  {item.category.map((category) => (
+                    <span key={category._id} className="pr-2">
+                      {category.name}
+                    </span>
+                  ))}
+                </td>
                 <td className="py-4 px-6 border-b border-gray-200">{item.variants}</td>
                 <td className="py-4 px-6 border-b border-gray-200">{item.sizes}</td>
                 <td className="py-4 px-6 border-b border-gray-200">{item.price}</td>

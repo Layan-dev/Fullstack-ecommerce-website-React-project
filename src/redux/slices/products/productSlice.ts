@@ -8,7 +8,7 @@ export type Product = {
   image: string
   description: string
   quantity: number
-  category: Category[]
+  category: Category[] | string[]
   variants: string[]
   sizes: string[]
   price: number
@@ -47,7 +47,7 @@ export const getProductsThunk = createAsyncThunk('products/get', async () => {
 })
 export const getProductsRequestThunk = createAsyncThunk('request/get', async (params: string) => {
   try {
-    console.log('==', params)
+    // console.log('==', params)
     const res = await api.get(`/api/products?${params}`)
     console.log('res from requst products thunk', res.data)
     return res.data
@@ -55,51 +55,7 @@ export const getProductsRequestThunk = createAsyncThunk('request/get', async (pa
     console.log('err', error)
   }
 })
-export const getSearchByNameThunk = createAsyncThunk('search/get', async (params: string) => {
-  try {
-    const res = await api.get(`/api/products?${params}`)
-    console.log('res from serach products thunk', res.data)
-    return res.data
-  } catch (error) {
-    console.log('err', error)
-  }
-})
-export const getSortProductThunk = createAsyncThunk(
-  'sort/get',
-  async ({ sortOrder, selectedPage }: { sortOrder: string; selectedPage: string }) => {
-    try {
-      const res = await api.get(`/api/products?pageNumber=${selectedPage}&sortOrder=${sortOrder}`)
-      console.log('res from sort products thunk', res.data)
-      return res.data
-    } catch (error) {
-      console.log('err', error)
-    }
-  }
-)
-export const getfilterByCategoryThunk = createAsyncThunk(
-  'categoryId/get',
-  async ({ categoryId, selectedPage }: { categoryId: string; selectedPage: string }) => {
-    try {
-      const res = await api.get(`/api/products?pageNumber=${selectedPage}&categoryId=${categoryId}`)
-      console.log('res from sort products thunk', res.data)
-      return res.data
-    } catch (error) {
-      console.log('err', error)
-    }
-  }
-)
-// export const getSearchBysizeThunk = createAsyncThunk(
-//   'search/get',
-//   async ({ search, selectedPage }: { search: string; selectedPage: string }) => {
-//     try {
-//       const res = await api.get(`/api/products?search=${search}&pageNumber=${selectedPage}`)
-//       console.log('res from serach products thunk', res.data)
-//       return res.data
-//     } catch (error) {
-//       console.log('err', error)
-//     }
-//   }
-// )
+
 export const deleteProductThunk = createAsyncThunk('products/delete', async (productId: string) => {
   try {
     await api.delete(`api/products/${productId}`)
@@ -112,9 +68,9 @@ export const editProductThunk = createAsyncThunk(
   'products/edit',
   async ({ productId, updatedProduct }: { productId: string; updatedProduct: Product }) => {
     try {
-      await api.put(`api/products/${productId}`, updatedProduct)
-      console.log('from inside thunk', productId)
-      return updatedProduct
+      const res = await api.put(`api/products/${productId}`, updatedProduct)
+      console.log('from inside thunk', res.data.newProduct)
+      return res.data.newProduct
     } catch (error) {
       console.log('👀 ', error)
     }
@@ -193,33 +149,7 @@ export const productSlice = createSlice({
       state.isLoading = false
       return state
     })
-    builder.addCase(getSearchByNameThunk.fulfilled, (state, action) => {
-      state.items = action.payload?.products
-      state.pageNumber = action.payload?.pageNumber
-      state.perPage = action.payload?.perPage
-      state.totalPages = action.payload?.totalPages
-      state.totalProducts = action.payload?.totalProducts
-      state.isLoading = false
-      return state
-    })
-    builder.addCase(getSortProductThunk.fulfilled, (state, action) => {
-      state.items = action.payload?.products
-      state.pageNumber = action.payload?.pageNumber
-      state.perPage = action.payload?.perPage
-      state.totalPages = action.payload?.totalPages
-      state.totalProducts = action.payload?.totalProducts
-      state.isLoading = false
-      return state
-    })
-    builder.addCase(getfilterByCategoryThunk.fulfilled, (state, action) => {
-      state.items = action.payload?.products
-      state.pageNumber = action.payload?.pageNumber
-      state.perPage = action.payload?.perPage
-      state.totalPages = action.payload?.totalPages
-      state.totalProducts = action.payload?.totalProducts
-      state.isLoading = false
-      return state
-    })
+
     builder.addCase(deleteProductThunk.fulfilled, (state, action) => {
       const productId = action.payload
       const updatedProducts = state.items.filter((product) => product._id !== productId)
@@ -228,6 +158,7 @@ export const productSlice = createSlice({
     })
     builder.addCase(editProductThunk.fulfilled, (state, action) => {
       const uptadetproduct = action.payload
+      console.log(uptadetproduct)
       if (uptadetproduct) {
         const uptadetproducts = state.items.map((product) =>
           product._id === uptadetproduct._id ? uptadetproduct : product

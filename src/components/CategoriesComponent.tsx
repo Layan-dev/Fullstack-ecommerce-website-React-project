@@ -1,13 +1,10 @@
 import axios from 'axios'
 import React, { useEffect } from 'react'
-import { Category, removeCategory, categoriesSlice } from '../redux/slices/products/categoriesSlice'
+import { Category, categoriesSlice } from '../redux/slices/products/categoriesSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../redux/store'
 import { SetURLSearchParams } from 'react-router-dom'
-import {
-  getProductsRequestThunk,
-  getfilterByCategoryThunk
-} from '../redux/slices/products/productSlice'
+import { getProductsRequestThunk } from '../redux/slices/products/productSlice'
 
 type Props = {
   searchParams: URLSearchParams
@@ -16,7 +13,7 @@ type Props = {
 export default function CategoriesComponent({ searchParams, setSearchParams }: Props) {
   const categoriesUrl = 'http://localhost:5050/api/categories/'
   const dispatch = useDispatch<AppDispatch>()
-  const state = useSelector((state: RootState) => state)
+
   const categories = useSelector((state: RootState) => state.category.items)
   const selectedCategoryId = searchParams.get('categoryId') || ''
 

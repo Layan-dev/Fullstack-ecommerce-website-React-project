@@ -4,10 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   Product,
   getProductsRequestThunk,
-  getProductsThunk,
-  getSearchByNameThunk,
-  getSortProductThunk,
-  getfilterByCategoryThunk
+  getProductsThunk
 } from '../redux/slices/products/productSlice'
 import { Link, useSearchParams } from 'react-router-dom'
 import CategoriesComponent from './CategoriesComponent'
@@ -19,24 +16,19 @@ export default function Products() {
   const currentItems = state.products.items
   const isLoading = state.products.isLoading
   const error = state.products.error
-  const selectedCategoryOp = state.category.selectedCategory
-  console.log('this is selectedCategoryOp', selectedCategoryOp)
 
-  // const [currentPage, setCurrentPage] = useState(1)
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('pageNumber') || 1
   const name = searchParams.get('search') || ''
   const sortOrder = searchParams.get('sortOrder') || ''
   const categoryId = searchParams.get('categoryId') || ''
-  // const sortField = searchParams.get('sortField') || ''
+
   console.log('searchParams page num', searchParams.get('pageNumber'))
   console.log('searchParams cat', searchParams.get('categoryId'))
   console.log('')
   const pagination = {
     pageNumber: state.products.pageNumber,
-    // perPage: state.products.perPage,
     totalPages: state.products.totalPages
-    // totalProducts: state.products.totalProducts
   }
 
   const dispatch = useDispatch<AppDispatch>()
@@ -190,12 +182,11 @@ export default function Products() {
             className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             key={pageNumber}
             onClick={() => {
-              // if (categoryId) {
-              //   handleGetByCatd(pageNumber, categoryId)
-              // } else if (sortOrder) {
-              //   handleSortProduct(pageNumber, sortOrder)
-              // } else
-              if (name) {
+              if (categoryId) {
+                handleGetByCatd(pageNumber, categoryId)
+              } else if (sortOrder) {
+                handleSortProduct(pageNumber, sortOrder)
+              } else if (name) {
                 handleGetProductsByName(name, pageNumber)
               } else {
                 handleGetProductsByNextPage(pageNumber)
