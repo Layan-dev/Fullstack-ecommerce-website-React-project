@@ -1,30 +1,75 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { json } from 'react-router'
 import { toast } from 'react-toastify'
+import { Product } from './products/productSlice'
+import { User } from './products/usersSlice'
+import api from '../../api'
 
 export type CartProduct = {
-  id: number
-  name: string
-  image: string
-  description: string
-  categories: number[]
-  variants: string[]
-  sizes: string[]
-  cartQuantity: number
-  price: number
+  _id: string
+  products: Product[]
+  userId: User
+  totalPrice: number
 }
 
-export type ProductState = {
-  cartItems: CartProduct[]
+export type CartState = {
+  cartItems: CartProduct | null
   cartTotal: number
   cartAmount: number
 }
+export const addToCartThunk = createAsyncThunk(
+  'cart/add',
+  async ({
+    userId,
+    productIds,
+    cartId,
+    isDecrementing = false
+  }: {
+    userId: string
+    productIds: string[]
+    cartId: string
+    isDecrementing?: boolean
+  }) => {
+    try {
+      const res = await api.post(`/api/users/addToCart/${userId}`, {
+        productIds,
+        cartId,
+        isDecrementing
+      })
+      console.log('res from user login thunk', res.data)
+      return res.data.cart
+    } catch (error) {
+      console.log('err', error)
+    }
+  }
+)
+export const getCartByUserIdThunk = createAsyncThunk('cart/get', async (userId: string) => {
+  try {
+    const res = await api.get(`/api/users/cart/${userId}`)
+    console.log('res from user login thunk', res.data)
+    return res.data
+  } catch (error) {
+    console.log('err', error)
+  }
+})
+export const addOrderThunk = createAsyncThunk(
+  'order/add',
+  async (orderInfo: { products: string[]; userId: string }) => {
+    try {
+      const res = await api.post(`/api/users/orders/addNewOrder`, orderInfo)
+      console.log('res from user login thunk', res.data)
+      return res.data
+    } catch (error) {
+      console.log('err', error)
+    }
+  }
+)
 
 // const cartItemsFromStorage = localStorage.getItem('cartItems')
 // const initialCartItems = cartItemsFromStorage ? JSON.parse(cartItemsFromStorage) : []
 
-const initialState: ProductState = {
-  cartItems: [],
+const initialState: CartState = {
+  cartItems: null,
   cartTotal: 0,
   cartAmount: 0
 }
@@ -32,55 +77,17 @@ const initialState: ProductState = {
 export const cartSlice = createSlice({
   name: 'cart',
   initialState,
-  reducers: {
-    addToCart: (state, action) => {
-      //check if the id already exist in cart items []
-      const itemIndex = state.cartItems.findIndex((item) => item.id === action.payload.id)
-
-      if (itemIndex >= 0) {
-        state.cartItems[itemIndex].cartQuantity += 1
-        toast.info(`${action.payload.name} cart Quantity`, {
-          position: 'bottom-left'
-        })
-      } else {
-        const tempProduct = { ...action.payload, cartQuantity: 1 } // increase the product by one if it already exist
-        state.cartItems.push(tempProduct)
-
-        toast.success(' added to cart', {
-          position: 'bottom-left'
-        })
-      }
-
-      localStorage.setItem('cartItems', JSON.stringify(state.cartItems))
-    },
-    removeProduct: (state, action: { payload: { productId: number } }) => {
-      const filteredItems = state.cartItems.filter(
-        (product) => product.id !== action.payload.productId
-      )
-      state.cartItems = filteredItems
-    },
-    decreaseCart: (state, action: { payload: { productId: number } }) => {
-      const itemIndex = state.cartItems.findIndex(
-        (cartItem) => cartItem.id === action.payload.productId
-      )
-      if (state.cartItems[itemIndex].cartQuantity > 1) {
-        state.cartItems[itemIndex].cartQuantity -= 1
-        toast.info(`${action.payload.productId} idk`, {
-          position: 'bottom-left'
-        })
-      } else if (state.cartItems[itemIndex].cartQuantity === 1) {
-        const filteredItems = state.cartItems.filter(
-          (product) => product.id !== action.payload.productId
-        )
-        state.cartItems = filteredItems
-        toast.error(`${action.payload.productId} remove from cart`, {
-          position: 'bottom-left'
-        })
-      }
-    }
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getCartByUserIdThunk.fulfilled, (state, action) => {
+      state.cartItems = action.payload
+      return state
+    })
+    builder.addCase(addToCartThunk.fulfilled, (state, action) => {
+      state.cartItems = action.payload
+      return state
+    })
   }
 })
-
-export const { addToCart, removeProduct, decreaseCart } = cartSlice.actions
 
 export default cartSlice.reducer

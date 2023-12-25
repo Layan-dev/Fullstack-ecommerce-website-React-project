@@ -15,7 +15,7 @@ import api from '../api'
 import { NavBar } from './NavBar'
 import Footer from './Footer'
 import axios from 'axios'
-import { categoriesSlice } from '../redux/slices/products/categoriesSlice'
+import { Category, categoriesSlice } from '../redux/slices/products/categoriesSlice'
 
 type Option = { value: string; label: string }
 
@@ -117,7 +117,9 @@ export function ProductForm() {
 
   const handleEditBtnClick = (item: Product) => {
     setSelectedProduct(item)
-    const options = item.category.map((cat) => ({
+    const categories = item.category
+
+    const options = categories.map((cat: any) => ({
       value: cat._id,
       label: cat.name
     }))

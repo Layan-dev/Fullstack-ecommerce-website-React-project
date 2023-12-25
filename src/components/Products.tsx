@@ -8,14 +8,16 @@ import {
 } from '../redux/slices/products/productSlice'
 import { Link, useSearchParams } from 'react-router-dom'
 import CategoriesComponent from './CategoriesComponent'
-import { addToCart } from '../redux/slices/cartSlice'
+import { addToCartThunk, getCartByUserIdThunk } from '../redux/slices/cartSlice'
 // import { getPagesThunk } from '../redux/slices/products/paginationSlice'
 
 export default function Products() {
   const state = useSelector((state: RootState) => state)
+  const cartItems = state.cart.cartItems
   const currentItems = state.products.items
   const isLoading = state.products.isLoading
   const error = state.products.error
+  const userId = state.users.decodedUser.userID
 
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('pageNumber') || 1
@@ -34,6 +36,8 @@ export default function Products() {
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
+    dispatch(getCartByUserIdThunk(userId))
+
     if (page && categoryId) {
       handleGetByCatd(pagination.pageNumber, categoryId)
     } else if (page && sortOrder) {
@@ -101,6 +105,15 @@ export default function Products() {
     handleSortProduct(pagination.pageNumber, e.target.value)
   }
 
+  const handleIncrement = (productId: string) => {
+    dispatch(
+      addToCartThunk({
+        productIds: [productId],
+        cartId: cartItems?._id || '',
+        userId
+      })
+    )
+  }
   return (
     <div>
       <div>
@@ -154,7 +167,7 @@ export default function Products() {
                     <Link to={`/products/${product._id}`}>
                       <button> More detail</button>
                     </Link>
-                    <div onClick={() => dispatch(addToCart(product))} className="ml-auto">
+                    <div onClick={() => handleIncrement(product._id)} className="ml-auto">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
