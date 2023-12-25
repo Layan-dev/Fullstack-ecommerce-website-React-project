@@ -1,5 +1,5 @@
-/* eslint-disable prettier/prettier */
 import axios from 'axios'
+
 import { getTokenFromStorage } from '../utils/token'
 
 const baseURL = process.env.BACKEND_ORIGIN || 'ad'

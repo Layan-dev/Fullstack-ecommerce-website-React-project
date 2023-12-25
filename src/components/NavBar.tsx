@@ -1,15 +1,15 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+
 import { RootState } from '../redux/store'
 import { logout } from '../redux/slices/products/usersSlice'
-import { ROLES } from '../constants'
 
 export const NavBar = () => {
   const users = useSelector((state: RootState) => state.users)
   const isAdmin = users.isAdmin
-  console.log('is it admin?', isAdmin)
   const isLoggedIn = users.isLoggedIn
+
   const dispatch = useDispatch()
 
   function handleLogout() {
@@ -18,10 +18,6 @@ export const NavBar = () => {
     dispatch(logout())
   }
 
-  //   console.log(userData?.role)
-  //   console.log('user logged out')
-  //   console.log(isLoggedIn)
-  // }
   return (
     <nav className="w-full flex py-6 justify-between items-center navbar">
       <ul className="flex border-b">

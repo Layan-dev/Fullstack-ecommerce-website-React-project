@@ -2,8 +2,8 @@ import { useParams } from 'react-router'
 import { AppDispatch, RootState } from '../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { productsRequest, singleProductsSuccess } from '../redux/slices/products/productSlice'
-import api from '../api'
+
+import { getProductsByIdThunk } from '../redux/slices/products/productSlice'
 import { addToCartThunk } from '../redux/slices/cartSlice'
 
 export default function ProductsDetail() {
@@ -19,13 +19,9 @@ export default function ProductsDetail() {
   }, [])
 
   const handleGetProduct = async () => {
-    dispatch(productsRequest())
-    try {
-      const res = await api.get(`/api/products/${id}`)
-      dispatch(singleProductsSuccess(res.data))
-      console.log('single product data:', res.data)
-    } catch (error) {
-      // Handle error
+    if (id) {
+      const res = await dispatch(getProductsByIdThunk(id))
+      return res.payload
     }
   }
   const handleIncrement = (productId: string) => {
@@ -42,22 +38,6 @@ export default function ProductsDetail() {
     return <div>No product found.</div>
   }
   return (
-    // <div>
-    //   <div key={productDetail?.id}>
-    //     <img src={productDetail?.image}></img>
-    //     <h3>ProductDetail</h3>
-    //     <p>
-    //       <b>categories:</b> {productDetail?.categories}
-    //     </p>
-    //     <p>
-    //       <b>sizes:</b>
-    //       {productDetail?.sizes}
-    //     </p>
-    //     <p>
-    //       <b>variants:</b> {productDetail?.variants}
-    //     </p>
-    //   </div>
-    // </div>
     <section className="overflow-hidden bg-white py-11 font-poppins dark:bg-gray-800">
       <div className="max-w-6xl px-4 py-4 mx-auto lg:py-8 md:px-6">
         <div className="flex flex-wrap -mx-4">
@@ -93,7 +73,7 @@ export default function ProductsDetail() {
                 {selectedProduct.variants}
               </div>
               <div className="flex items-center mb-8">
-                <h2 className="w-16 text-xl font-bold dark:text-gray-400">Age:</h2>
+                <h2 className="w-16 text-xl font-bold dark:text-gray-400">Size:</h2>
                 {selectedProduct.sizes}
               </div>
               <div className="flex flex-wrap items-center -mx-4 ">

@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export type User = {
-  id: number
+  _id: string
   firstName: string
   lastName: string
   email: string
@@ -31,30 +31,11 @@ export const usersInfoSlice = createSlice({
   name: 'userInfo',
   initialState,
   reducers: {
-    login: (state, action) => {
-      state.isLoggedIn = true
-      state.userData = action.payload
-    },
-    Adminlogin: (state, action: PayloadAction<User>) => {
-      if (state.userData?.role === 'admin') {
-        state.isAdmin = true
-        state.userData = action.payload
-      }
-    },
-
-    usersRequest: (state) => {
-      state.isLoading = true
-    },
-    usersSuccess: (state, action) => {
-      state.isLoading = false
-      state.users = action.payload
-    },
-
     getError: (state, action: PayloadAction<string>) => {
       state.error = action.payload
     }
   }
 })
-export const { Adminlogin, login, usersRequest, usersSuccess } = usersInfoSlice.actions
+export const { getError } = usersInfoSlice.actions
 
 export default usersInfoSlice.reducer

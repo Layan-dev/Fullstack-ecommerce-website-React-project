@@ -19,6 +19,7 @@ const initialState: CategoriesState = {
   isLoading: false,
   selectedCategory: ''
 }
+
 export const getCategoriesThunk = createAsyncThunk('categories/get', async () => {
   try {
     const res = await api.get('/api/categories/')
@@ -56,44 +57,8 @@ export const categoriesSlice = createSlice({
   name: 'category',
   initialState,
   reducers: {
-    categoryRequest: (state) => {
-      state.isLoading = true
-    },
-    categorySuccess: (state, action: PayloadAction<Category[]>) => {
-      state.isLoading = false
-      state.items = action.payload
-    },
-
-    // setSelectedCategory:(state,action:PayloadAction<Categories>)=>{
-
-    // },
-
-    setSelectedCategory: (state, action: PayloadAction<string>) => {
-      state.selectedCategory = action.payload
-      console.log('selected cat', action.payload)
-      console.log(state)
-    },
-
-    addCategory: (state, action: { payload: { category: Category } }) => {
-      // let's append the new product to the beginning of the array
-      state.items = [action.payload.category, ...state.items]
-    },
-    removeCategory: (state, action: { payload: { categoryId: string } }) => {
-      const filteredItems = state.items.filter(
-        (category) => category._id !== action.payload.categoryId
-      )
-      state.items = filteredItems
-    },
-
     getError: (state, action: PayloadAction<string>) => {
       state.error = action.payload
-    },
-    updateCategory: (state, action: { payload: { editCategory: Category } }) => {
-      const filteredItems = state.items.filter(
-        (category) => category._id !== action.payload.editCategory._id
-      )
-      state.items = filteredItems
-      state.items = [action.payload.editCategory, ...state.items]
     }
   },
   extraReducers: (builder) => {
@@ -133,13 +98,6 @@ export const categoriesSlice = createSlice({
     })
   }
 })
-export const {
-  setSelectedCategory,
-  categoryRequest,
-  categorySuccess,
-  removeCategory,
-  addCategory,
-  updateCategory
-} = categoriesSlice.actions
+export const { getError } = categoriesSlice.actions
 
 export default categoriesSlice.reducer

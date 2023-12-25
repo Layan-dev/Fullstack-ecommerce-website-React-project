@@ -1,31 +1,17 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-// import { useDispatch, useSelector } from 'react-redux'
-// import { useNavigate } from 'react-router'
-// import { RootState } from '../redux/store'
-// import { addUser, login, usersRequest, usersSuccess } from '../redux/slices/products/usersSlice'
-import api from '../api'
 import { Link } from 'react-router-dom'
+import { AppDispatch } from '../redux/store'
+import { useDispatch } from 'react-redux'
+
 import { AxiosError } from 'axios'
-import { NavBar } from './NavBar'
-import Footer from './Footer'
+
+import { registerThunk } from '../redux/slices/products/usersSlice'
 
 export default function Regeregister() {
-  // const users = useSelector((state: RootState) => state.users.users)
-  // const navigate = useNavigate()
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
   const [successMessage, setSuccessMessage] = useState<null | string>(null)
   const [loading, setloading] = useState(false)
-
-  // useEffect(() => {
-  //   handleGetUsers()
-  // }, [])
-  // const handleGetUsers = async () => {
-  //   dispatch(usersRequest())
-
-  //   const res = await api.get('/mock/e-commerce/users.json')
-  //   dispatch(usersSuccess(res.data))
-  // }
 
   const [user, setUser] = useState({
     firstName: '',
@@ -44,9 +30,9 @@ export default function Regeregister() {
     event.preventDefault()
     try {
       setloading(true)
-      const res = await api.post('/api/auth/register', user)
+      const res = await dispatch(registerThunk(user))
       console.log('res', res)
-      setSuccessMessage(res.data.msg)
+      setSuccessMessage(res.payload.msg)
       setErrorMessage(null)
     } catch (error) {
       console.log('error', error)
@@ -57,23 +43,6 @@ export default function Regeregister() {
     } finally {
       setloading(false)
     }
-
-    // try {
-    //   const foundUser = users.find((userData) => userData.email === user.email)
-
-    //   if (foundUser && foundUser.email === user.email) {
-    //     console.log('user already exist')
-    //   } else {
-    //     dispatch(addUser(user))
-    //     console.log(user)
-    //     dispatch(login(true))
-    //     alert('you sucssfully register')
-    //     navigate('/')
-    //     console.log('sucsses')
-    //   }
-    // } catch (error) {
-    //   setErrorMessage('An error occurred')
-    // }
   }
   return (
     <div>

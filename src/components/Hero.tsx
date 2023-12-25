@@ -33,7 +33,7 @@ export default function Hero() {
           </a>
         </div>
         <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-          <img src="https://clipart-library.com/images/5iRrGr5eT.jpg" alt="mockup" />
+          <img src="\src\components\images\hero2.png" alt="mockup" />
         </div>
       </div>
     </section>

@@ -1,10 +1,8 @@
+import { ChangeEvent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-// import { removeUser, usersRequest, usersSuccess } from '../redux/slices/products/usersSlice'
-import { AppDispatch, RootState } from '../redux/store'
-
-import api from '../api'
 import { Link } from 'react-router-dom'
+
+import { AppDispatch, RootState } from '../redux/store'
 import {
   Role,
   User,
@@ -12,10 +10,8 @@ import {
   getUsersThunk,
   grantRoleUserThunk
 } from '../redux/slices/products/usersSlice'
-import { ChangeEvent, useEffect } from 'react'
+
 import { ROLES } from '../constants'
-import Footer from './Footer'
-import { NavBar } from './NavBar'
 
 export default function Users() {
   const dispatch = useDispatch<AppDispatch>()
@@ -37,14 +33,6 @@ export default function Users() {
     const role = e.target.value as Role
     dispatch(grantRoleUserThunk({ role, userId }))
   }
-  //fetching data of products
-  // const handleGetUsers = async () => {
-  //   // dispatch(usersRequest)
-
-  //   const res = await api.get('/mock/e-commerce/users.json')
-  //   // dispatch(usersSuccess(res.data))
-  //   console.log(res.data)
-  // }
 
   return (
     <div className="w-3/4 bg-white p-4">
@@ -66,7 +54,6 @@ export default function Users() {
         <table className="w-full table-fixed border">
           <thead>
             <tr className="bg-gray-100">
-              {/* <th className="w-1/5 py-4 px-6 text-left text-gray-600 font-bold">Image</th> */}
               <th className="w-1/5 py-4 px-6 text-left text-gray-600 font-bold">First Name</th>
               <th className="w-1/4 py-4 px-6 text-left text-gray-600 font-bold">Last Name</th>
               <th className="w-1/4 py-4 px-6 text-left text-gray-600 font-bold">Role</th>
@@ -79,9 +66,6 @@ export default function Users() {
           <tbody className="bg-white">
             {users.map((user) => (
               <tr key={user._id}>
-                {/* <td className="py-4 px-6 border-b border-gray-200">
-                  <img src={user.image} width={100} />
-                </td> */}
                 <td className="py-4 px-6 border-b border-gray-200">{user.firstName}</td>
                 <td className="py-4 px-6 border-b border-gray-200">{user.lastName}</td>
                 <td className="py-4 px-6 border-b border-gray-200">{user.email}</td>
@@ -99,7 +83,6 @@ export default function Users() {
                 </td>
                 <td>
                   <button
-                    // onClick={() => dispatch(removeUser({ userId: user.id }))}
                     onClick={() => handleDeleteUser(user._id)}
                     className="text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-blue active:bg-red-600 py-2 px-4 font-small">
                     Delete

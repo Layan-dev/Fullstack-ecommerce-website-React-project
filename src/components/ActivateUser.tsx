@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import api from '../api'
 import { useParams } from 'react-router'
+
+import api from '../api'
 import { AxiosError } from 'axios'
 
 export default function ActivateUser() {

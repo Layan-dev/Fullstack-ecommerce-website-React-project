@@ -1,5 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from '../../../api'
+
 import { orderStatus } from '../../../constants'
 
 export type OrderStatus = keyof typeof orderStatus
@@ -58,22 +59,9 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    productsRequest: (state) => {
-      state.isLoading = true
-    },
-    productsSuccess: (state, action: PayloadAction<Order[]>) => {
-      state.isLoading = false
-      state.items = action.payload
+    getError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload
     }
-
-    // addOrder: (state, action: { payload: { product: Order } }) => {
-    //   // let's append the new product to the beginning of the array
-    //   state.items = [action.payload.product, ...state.items]
-    // },
-
-    // getError: (state, action: PayloadAction<string>) => {
-    //   state.error = action.payload
-    // }
   },
   extraReducers: (builder) => {
     builder.addCase(getOrdersThunk.pending, (state) => {
@@ -131,6 +119,6 @@ export const orderSlice = createSlice({
     })
   }
 })
-export const { productsRequest, productsSuccess } = orderSlice.actions
+export const { getError } = orderSlice.actions
 
 export default orderSlice.reducer

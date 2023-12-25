@@ -1,6 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+
 import api from '../../../api'
-import { builtinModules } from 'module'
+
 import { getDecodedTokenFromStorage, getTokenFromStorage } from '../../../utils/token'
 import { ROLES } from '../../../constants'
 
@@ -49,13 +50,19 @@ const initialState: UserState = {
   isAdmin,
   userData: decodedUser
 }
-
+export const registerThunk = createAsyncThunk('user/register', async (user: Partial<User>) => {
+  try {
+    const res = await api.post('/api/auth/register', user)
+    return res.data
+  } catch (error) {
+    console.log('err', error)
+  }
+})
 export const loginThunk = createAsyncThunk(
   'user/login',
   async (credentials: { email: string; password: string }) => {
     try {
       const res = await api.post('/api/auth/login', credentials)
-      console.log('res from user login thunk', res.data)
       return res.data
     } catch (error) {
       console.log('err', error)
@@ -65,7 +72,6 @@ export const loginThunk = createAsyncThunk(
 export const getUsersThunk = createAsyncThunk('user/get', async () => {
   try {
     const res = await api.get('/api/users/admin/getAllUsers')
-    console.log('res from all users thunk', res.data)
     return res.data.users
   } catch (error) {
     console.log('err', error)
@@ -100,11 +106,8 @@ export const updateUserProfileThunk = createAsyncThunk(
   'singleUser/edit',
   async ({ userId, updatedUser }: { userId: User['_id']; updatedUser: Partial<User> }) => {
     try {
-      console.log('first')
       const res = await api.put(`/api/users/profile/${userId}`, updatedUser)
       const data = res.data
-      console.log('res', res.data)
-      console.log('updated User', updatedUser)
       return { data, updatedUser }
     } catch (error) {
       console.log('👀 ', error)
@@ -114,7 +117,6 @@ export const updateUserProfileThunk = createAsyncThunk(
 export const getSingleUserThunk = createAsyncThunk('user/get', async (userId: string) => {
   try {
     const res = await api.get(`/api/users/${userId}`)
-    console.log(res)
     return res.data
   } catch (error) {
     console.log(error)
@@ -128,9 +130,6 @@ export const usersSlice = createSlice({
       state.isLoggedIn = false
       state.userData = null
       state.isAdmin = false
-    },
-    userRequest: (state) => {
-      state.isLoading = true
     },
     getError: (state, action: PayloadAction<string>) => {
       state.error = action.payload
@@ -147,6 +146,15 @@ export const usersSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
+    builder.addCase(registerThunk.fulfilled, (state, action) => {
+      const newUser = action.payload
+      console.log('this is the created product ', newUser)
+      if (newUser) {
+        state.users = [newUser, ...state.users]
+        console.log(state.users)
+        return state
+      }
+    })
     builder.addCase(loginThunk.pending, (state) => {
       state.isLoading = true
     })
@@ -202,6 +210,6 @@ export const usersSlice = createSlice({
     })
   }
 })
-export const { logout, updateUserFromPayload } = usersSlice.actions
+export const { logout, updateUserFromPayload, getError } = usersSlice.actions
 
 export default usersSlice.reducer

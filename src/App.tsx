@@ -1,13 +1,13 @@
 import './App.css'
+import { Route, Routes, useNavigate } from 'react-router'
+
 import { NavBar } from './components/NavBar'
 import Products from './components/Products'
 import Footer from './components/Footer'
-import { Route, Routes } from 'react-router'
 import Home from './components/Home'
 import ProductsDetail from './components/ProductsDetail'
 import ShoppigCart from './components/ShoppigCart'
 import Admin from './components/Admin'
-
 import Login from './components/Login'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import { ProductForm } from './components/ProductForm'
@@ -20,8 +20,27 @@ import ActivateUser from './components/ActivateUser'
 import { PageNotFound } from './components/404'
 import { ForgotPassword } from './components/ForgotPassword'
 import { ResetPassword } from './components/ResetPassword'
+import { getDecodedTokenFromStorage } from './utils/token'
+import { useState, useEffect } from 'react'
 
 function App() {
+  const navigate = useNavigate()
+  const decodedToken = getDecodedTokenFromStorage()
+  const [isTokenExpired, setIsTokenExpired] = useState(false)
+
+  useEffect(() => {
+    if (decodedToken) {
+      if (decodedToken.exp * 1000 < new Date().getTime()) {
+        localStorage.removeItem('token')
+        console.log('Time Expired')
+        setIsTokenExpired(true)
+      }
+    }
+  }, [decodedToken])
+
+  if (isTokenExpired) {
+    navigate('/login')
+  }
   return (
     <div className="App">
       <NavBar />
@@ -45,7 +64,6 @@ function App() {
           <Route path="/users" element={<Users />} />
         </Route>
       </Routes>
-
       <Footer />
     </div>
   )

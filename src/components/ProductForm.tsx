@@ -2,18 +2,15 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Select, { MultiValue } from 'react-select'
 
+import { AppDispatch, RootState } from '../redux/store'
+import { getCategoriesThunk } from '../redux/slices/products/categoriesSlice'
 import {
   Product,
+  createProductThunk,
   deleteProductThunk,
   editProductThunk,
   getProductsRequestThunk
 } from '../redux/slices/products/productSlice'
-import { AppDispatch, RootState } from '../redux/store'
-
-import api from '../api'
-
-import axios from 'axios'
-import { categoriesSlice } from '../redux/slices/products/categoriesSlice'
 
 type Option = { value: string; label: string }
 
@@ -33,17 +30,8 @@ export function ProductForm() {
   const [loading, setloading] = useState(false)
 
   useEffect(() => {
-    function fetchCategories() {
-      const categoriesUrl = 'http://localhost:5050/api/categories/'
-
-      axios
-        .get(categoriesUrl)
-        .then((response) => dispatch(categoriesSlice.actions.categorySuccess(response.data)))
-        .catch((error) => console.log(categoriesSlice.actions.getError(error.message)))
-    }
-
+    dispatch(getCategoriesThunk())
     dispatch(getProductsRequestThunk('perPage=1000'))
-    fetchCategories()
   }, [])
 
   const handleDeleteProduct = (id: string) => {
@@ -53,7 +41,7 @@ export function ProductForm() {
     dispatch(deleteProductThunk(id))
   }
   const [product, setProduct] = useState({
-    _id: 0,
+    _id: '',
     name: '',
     image: '',
     description: '',
@@ -95,19 +83,17 @@ export function ProductForm() {
         setSelectedProduct(null)
         setSelectedOption([])
       } else {
-        const res = await api.post('/api/products', { ...product, category: selectedCategoryIds })
-        console.log('res', res)
-        console.log('products', products)
+        // const res = await api.post('/api/products', { ...product, category: selectedCategoryIds })
+        const res = await dispatch(
+          createProductThunk({ product: product, category: selectedCategoryIds })
+        )
         setSelectedOption([])
-        setSuccessMessage(res.data.msg)
+        setSuccessMessage(res.payload.message)
         setErrorMessage(null)
+        return res.payload
       }
     } catch {
-      // console.log('error', error)
-      // if (error instanceof AxiosError) {
-      //   setErrorMessage(error.response?.data)
       setSuccessMessage(null)
-      // }
     } finally {
       setloading(false)
     }
@@ -180,19 +166,6 @@ export function ProductForm() {
                   options={options}
                   isMulti
                 />
-                {/* <input
-                  type="text"
-                  name="category"
-                  id="category"
-                  value={
-                    selectedProduct
-                      ? selectedProduct.category.map((cat) => cat.name).join(',')
-                      : product.category.join(',')
-                  }
-                  onChange={handleChange}
-                  className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-3 leading-5 placeholder-gray-500 focus:border-gray-500 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm"
-                  placeholder="Categories"
-                /> */}
               </div>
             </div>
 
@@ -254,12 +227,6 @@ export function ProductForm() {
               style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {selectedProduct ? 'Edit Product' : 'Add Product'}
             </button>
-            <button
-              type="reset"
-              className="mt-3 inline-flex items-center justify-center rounded-md border border-transparent bg-gray-500 px-4 py-2 font-medium text-white shadow-sm hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-              style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              cancel
-            </button>
           </form>
         </div>
 
@@ -302,7 +269,6 @@ export function ProductForm() {
                     Edit
                   </button>
                   <button
-                    // onClick={() => dispatch(removeProduct({ productId: item._id }))}
                     onClick={() => handleDeleteProduct(item._id)}
                     className="text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-blue active:bg-red-600 py-2 px-4 font-small">
                     Delete

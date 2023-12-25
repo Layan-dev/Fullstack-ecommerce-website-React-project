@@ -1,21 +1,16 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../redux/store'
+import { Link } from 'react-router-dom'
+
+import api from '../api'
+
 import {
   Category,
-  addCategory,
-  categoryRequest,
-  categorySuccess,
   deleteCategoryThunk,
   editCategoryThunk,
-  getCategoriesThunk,
-  removeCategory,
-  updateCategory
+  getCategoriesThunk
 } from '../redux/slices/products/categoriesSlice'
-import api from '../api'
-import { Link } from 'react-router-dom'
-import { NavBar } from './NavBar'
-import Footer from './Footer'
 
 export default function CategoriesForm() {
   const dispatch = useDispatch<AppDispatch>()
@@ -24,9 +19,6 @@ export default function CategoriesForm() {
   const [category, setCategory] = useState({ name: '' })
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 
-  // useEffect(() => {
-  //   handleGetCategories()
-  // }, [])
   useEffect(() => {
     dispatch(getCategoriesThunk())
   }, [])
@@ -55,8 +47,6 @@ export default function CategoriesForm() {
         editCategoryThunk({ categoryId: selectedCategory._id, updatedCategory: updatedCategory })
       )
     } else {
-      // const newCategory = { id: new Date().getTime(), ...category }
-      // dispatch(addCategory({ category: newCategory }))
       const res = await api.post('/api/categories', category)
       console.log('res', res)
       console.log('products', catiegories)
@@ -65,13 +55,6 @@ export default function CategoriesForm() {
     setCategory({ name: '' })
     setSelectedCategory(null)
   }
-
-  // const handleGetCategories = async () => {
-  //   dispatch(categoryRequest())
-
-  //   const res = await api.get('/mock/e-commerce/categories.json')
-  //   dispatch(categorySuccess(res.data))
-  // }
 
   const handleEditBtnClick = (item: Category) => {
     setSelectedCategory(item)

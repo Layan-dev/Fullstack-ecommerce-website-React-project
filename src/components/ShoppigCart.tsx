@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../redux/store'
+
 import { addOrderThunk, addToCartThunk, getCartByUserIdThunk } from '../redux/slices/cartSlice'
 import { Product } from '../redux/slices/products/productSlice'
-import { NavBar } from './NavBar'
-import Footer from './Footer'
 
 export default function Cart() {
   const dispatch = useDispatch<AppDispatch>()
   const state = useSelector((state: RootState) => state)
   const cartItems = state.cart.cartItems
   const userId = state.users.decodedUser.userID
-
-  const [shipping, setShipping] = useState(0)
 
   useEffect(() => {
     dispatch(getCartByUserIdThunk(userId))
@@ -124,16 +121,12 @@ export default function Cart() {
                 <p className="text-gray-700">Subtotal</p>
                 <p className="text-gray-700">{newTotalAmount} SAR </p>
               </div>
-              {/* <div className="flex justify-between">
-                <p className="text-gray-700">Shipping</p>
-                <p className="text-gray-700">$20</p>
-              </div> */}
+
               <hr className="my-4" />
               <div className="flex justify-between">
                 <p className="text-lg font-bold">Total</p>
                 <div className="">
                   <p className="mb-1 text-lg font-bold">{newTotalAmount}</p>
-                  {/*change cartItems.price*item.cartQuantity + 20 */}
                 </div>
               </div>
               <button

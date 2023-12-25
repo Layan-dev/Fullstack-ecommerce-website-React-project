@@ -1,15 +1,15 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect } from 'react'
 import { AppDispatch, RootState } from '../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link, useSearchParams } from 'react-router-dom'
+
 import {
   Product,
   getProductsRequestThunk,
   getProductsThunk
 } from '../redux/slices/products/productSlice'
-import { Link, useSearchParams } from 'react-router-dom'
 import CategoriesComponent from './CategoriesComponent'
 import { addToCartThunk, getCartByUserIdThunk } from '../redux/slices/cartSlice'
-// import { getPagesThunk } from '../redux/slices/products/paginationSlice'
 
 export default function Products() {
   const state = useSelector((state: RootState) => state)
@@ -25,9 +25,6 @@ export default function Products() {
   const sortOrder = searchParams.get('sortOrder') || ''
   const categoryId = searchParams.get('categoryId') || ''
 
-  console.log('searchParams page num', searchParams.get('pageNumber'))
-  console.log('searchParams cat', searchParams.get('categoryId'))
-  console.log('')
   const pagination = {
     pageNumber: state.products.pageNumber,
     totalPages: state.products.totalPages
@@ -126,10 +123,6 @@ export default function Products() {
             value={name}
             onChange={handleSearch}
           />
-          {/* <select name="sortField" title="sort Field" onChange={(e) => handleSortField(e)}>
-            <option>Select option</option>
-            <option> price</option>
-          </select> */}
           <select
             name="sortOrder"
             title="sort Order"

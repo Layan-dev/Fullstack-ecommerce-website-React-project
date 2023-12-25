@@ -1,8 +1,7 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { json } from 'react-router'
-import { toast } from 'react-toastify'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Product } from './products/productSlice'
 import { User } from './products/usersSlice'
+
 import api from '../../api'
 
 export type CartProduct = {
@@ -57,16 +56,12 @@ export const addOrderThunk = createAsyncThunk(
   async (orderInfo: { products: string[]; userId: string }) => {
     try {
       const res = await api.post(`/api/users/orders/addNewOrder`, orderInfo)
-      console.log('res from user login thunk', res.data)
       return res.data
     } catch (error) {
       console.log('err', error)
     }
   }
 )
-
-// const cartItemsFromStorage = localStorage.getItem('cartItems')
-// const initialCartItems = cartItemsFromStorage ? JSON.parse(cartItemsFromStorage) : []
 
 const initialState: CartState = {
   cartItems: null,

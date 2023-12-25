@@ -1,31 +1,21 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
-// import { RootState } from '../redux/store'
-// import axios from 'axios'
-
-// import { Adminlogin, login, usersSlice } from '../redux/slices/products/usersSlice'
+import api from '../api'
 
 import { AppDispatch, RootState } from '../redux/store'
 import { loginThunk } from '../redux/slices/products/usersSlice'
-import api from '../api'
+
 import { ROLES } from '../constants'
-import { useNavigate } from 'react-router'
-import { NavBar } from './NavBar'
-import Footer from './Footer'
-import { Link } from 'react-router-dom'
 
 export default function Login() {
-  // const users = useSelector((state: RootState) => state.users.users)
-  // const [errorMessage, setErrorMessage] = useState<null | string>(null)
-  // const [successMessage, setSuccessMessage] = useState<null | string>(null)
-  // const [loading, setloading] = useState(false)
   const state = useSelector((state: RootState) => state)
   const navigate = useNavigate()
-  // const user = state.users.userData
-  const users = state.users
   const dispatch = useDispatch<AppDispatch>()
 
+  const users = state.users
   const [credentials, setUser] = useState({
     email: '',
     password: ''
@@ -38,56 +28,22 @@ export default function Login() {
   }
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    try {
-      const res = await dispatch(loginThunk(credentials))
-      const token = res.payload.token
-      const user = res.payload.userData
-      console.log('is there token?', res.payload)
-      localStorage.setItem('token', res.payload.token)
-      api.defaults.headers['Authorization'] = `Bearer ${token}`
-      if (res.meta.requestStatus === 'fulfilled') {
-        console.log('is there token?', res.payload)
-        localStorage.setItem('token', res.payload.token)
-      }
-      // if (user.role === ROLES.ADMIN) {
-      //   navigate('/admin')
-      // }
-      // if (user.role === ROLES.USER) {
-      //   navigate('/')
-      // }
-      // setErrorMessage(null)
-    } catch (error) {
-      // console.log('error', error)
-      // if (error instanceof AxiosError) {
-      //   setErrorMessage(error.response?.data)
-      //   setSuccessMessage(null)
-    }
-    // } finally {
-    //   setloading(false)
-    // }
-  }
-  // const handleSubmit = async (event: FormEvent) => {
-  //   event.preventDefault()
-  //   try {
-  //     const foundUser = users.find((userData) => userData.email === user.email)
-  //     if (foundUser && foundUser.password === user.password) {
-  //       dispatch(login(foundUser))
-  //       console.log('logeed In')
-  //       if (foundUser && foundUser.role === 'admin') {
-  //         dispatch(Adminlogin(foundUser))
-  //         navigate('/admin')
-  //       } else {
-  //         navigate('/')
-  //       }
-  //     } else {
-  //       alert('email or password are wrong, try again ')
-  //       console.log('somthing wrong')
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
+    const res = await dispatch(loginThunk(credentials))
+    const token = res.payload.token
+    const user = res.payload.user
+    localStorage.setItem('token', res.payload.token)
+    api.defaults.headers['Authorization'] = `Bearer ${token}`
+    if (res.meta.requestStatus === 'fulfilled') {
+      localStorage.setItem('token', res.payload.token)
+    }
+    if (user.role === ROLES.ADMIN) {
+      navigate('/admin')
+    }
+    if (user.role === ROLES.USER) {
+      navigate('/')
+    }
+  }
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -150,12 +106,9 @@ export default function Login() {
                 {'Forgot password ?'}
               </Link>
             </form>
-            {/* {errorMessage && <div className="error-message text-red-600">{errorMessage}</div>}
-            {successMessage && <div className="error-message text-green-600">{successMessage}</div>} */}
           </div>
         </div>
         {users.error && <p className="text-red-600">{users.error}</p>}
-        {/* {successMessage && <p className="text-green-600">{successMessage}</p>} */}
       </div>
     </section>
   )
