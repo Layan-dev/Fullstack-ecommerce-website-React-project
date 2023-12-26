@@ -32,7 +32,9 @@ export default function Login() {
 
     const res = await dispatch(loginThunk(credentials))
     if (res.meta.requestStatus === 'fulfilled') {
+      const user = res.payload.user
       if (user?.role === ROLES.ADMIN) {
+        console.log('heereee', user)
         navigate('/admin')
       } else if (user?.role === ROLES.USER) {
         navigate('/')

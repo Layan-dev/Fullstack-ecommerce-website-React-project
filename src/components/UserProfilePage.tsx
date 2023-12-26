@@ -75,7 +75,7 @@ export default function UserProfilePage() {
   }
   return (
     <div style={{ backgroundColor: '' }}>
-      <div className="max-w-lg mx-auto my-10 bg-white rounded-lg shadow-md p-5">
+      <div className="max-w-lg mx-auto my-10 bg-blue-300 rounded-lg shadow-md p-5">
         <img
           className="w-32 h-32 rounded-full mx-auto"
           src="https://picsum.photos/200"
@@ -87,12 +87,12 @@ export default function UserProfilePage() {
           <button
             onClick={handleFormOpen}
             type="button"
-            className="px-3 py-2 text-xs font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             Edit
           </button>{' '}
         </h2>
 
-        <p className="text-center text-gray-600 mt-1">{userData?.email}</p>
+        <p className="text-center text-grey-600 mt-1">{userData?.email}</p>
 
         <div className="flex justify-center mt-5"></div>
 
@@ -135,7 +135,7 @@ export default function UserProfilePage() {
             <div>
               <button
                 type="submit"
-                className="px-3 py-2 text-xs font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-6 ml-5">
+                className="px-3 py-2 text-xs font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-6 ml-5">
                 Update Profile
               </button>
             </div>

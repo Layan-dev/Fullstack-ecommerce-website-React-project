@@ -111,7 +111,8 @@ export const updateUserProfileThunk = createAsyncThunk(
     try {
       const res = await api.put(`/api/users/profile/${userId}`, updatedUser)
       const data = res.data
-      return { data, updatedUser }
+      console.log('data inside update user thunk', data)
+      return { data }
     } catch (error) {
       console.log('👀 ', error)
     }
@@ -177,6 +178,7 @@ export const usersSlice = createSlice({
       state.isLoggedIn = true
       state.isLoading = false
       console.log('is Admin', isAdmin)
+      console.log
       return state
     })
     builder.addCase(getUsersThunk.fulfilled, (state, action) => {
@@ -203,7 +205,8 @@ export const usersSlice = createSlice({
       return state
     })
     builder.addCase(updateUserProfileThunk.fulfilled, (state, action) => {
-      const updatedUser = action.payload?.updatedUser
+      const updatedUser = action.payload?.data.user
+      console.log('updated user', updatedUser)
       const userId = updatedUser?._id
       if (updatedUser) {
         const updatedUsers = state.users.map((user) =>
