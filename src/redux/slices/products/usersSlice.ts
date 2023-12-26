@@ -63,6 +63,9 @@ export const loginThunk = createAsyncThunk(
   async (credentials: { email: string; password: string }) => {
     try {
       const res = await api.post('/api/auth/login', credentials)
+      const token = res.data.token
+      localStorage.setItem('token', token)
+      api.defaults.headers['Authorization'] = `Bearer ${token}`
       return res.data
     } catch (error) {
       console.log('err', error)
@@ -168,10 +171,12 @@ export const usersSlice = createSlice({
       return state
     })
     builder.addCase(loginThunk.fulfilled, (state, action) => {
-      state.userData = action.payload.user
+      const user = action.payload.user
+      state.userData = user
       state.isAdmin = isAdmin
       state.isLoggedIn = true
       state.isLoading = false
+      console.log('is Admin', isAdmin)
       return state
     })
     builder.addCase(getUsersThunk.fulfilled, (state, action) => {

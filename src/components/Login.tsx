@@ -12,6 +12,7 @@ import { ROLES } from '../constants'
 
 export default function Login() {
   const state = useSelector((state: RootState) => state)
+  const user = state.users.userData
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
 
@@ -30,18 +31,12 @@ export default function Login() {
     event.preventDefault()
 
     const res = await dispatch(loginThunk(credentials))
-    const token = res.payload.token
-    const user = res.payload.user
-    localStorage.setItem('token', res.payload.token)
-    api.defaults.headers['Authorization'] = `Bearer ${token}`
     if (res.meta.requestStatus === 'fulfilled') {
-      localStorage.setItem('token', res.payload.token)
-    }
-    if (user.role === ROLES.ADMIN) {
-      navigate('/admin')
-    }
-    if (user.role === ROLES.USER) {
-      navigate('/')
+      if (user?.role === ROLES.ADMIN) {
+        navigate('/admin')
+      } else if (user?.role === ROLES.USER) {
+        navigate('/')
+      }
     }
   }
   return (

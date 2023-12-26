@@ -57,8 +57,6 @@ export default function Products() {
     return <div> {error}</div>
   }
 
-  const filteredProducts = currentItems
-  console.log('filtered products', filteredProducts)
   const totalPages = pagination.totalPages
 
   const handleGetProductsByName = async (search: string, selectedPage: number) => {

@@ -11,7 +11,7 @@ const useAuth = () => {
   const user = localStorage.getItem('token')
   //checking whether token is preset or not
   if (user) {
-    return true && userloggedIn && isAdmin
+    return userloggedIn && isAdmin
   } else {
     return false
   }
