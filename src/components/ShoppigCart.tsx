@@ -4,13 +4,23 @@ import { AppDispatch, RootState } from '../redux/store'
 
 import { addOrderThunk, addToCartThunk, getCartByUserIdThunk } from '../redux/slices/cartSlice'
 import { Product } from '../redux/slices/products/productSlice'
+import { Link } from 'react-router-dom'
 
 export default function Cart() {
   const dispatch = useDispatch<AppDispatch>()
   const state = useSelector((state: RootState) => state)
   const cartItems = state.cart.cartItems
-  const userId = state.users.decodedUser.userID
-
+  const userId = state.users.decodedUser ? state.users.decodedUser.userID : null
+  if (!userId) {
+    return (
+      <div>
+        <p>You should login first to create an order</p>
+        <Link to="/login">
+          <button>Login</button>
+        </Link>
+      </div>
+    )
+  }
   useEffect(() => {
     dispatch(getCartByUserIdThunk(userId))
   }, [])

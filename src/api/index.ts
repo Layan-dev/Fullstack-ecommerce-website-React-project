@@ -2,8 +2,8 @@ import axios from 'axios'
 
 import { getTokenFromStorage } from '../utils/token'
 
-const baseURL = process.env.BACKEND_ORIGIN || 'ad'
-console.log('base url', baseURL)
+const baseURL = process.env.VITE_BACKEND_ORIGIN || 'http://localhost:5050'
+
 const api = axios.create({
   baseURL
 })

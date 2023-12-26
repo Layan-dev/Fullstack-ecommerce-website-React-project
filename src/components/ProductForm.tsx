@@ -244,38 +244,43 @@ export function ProductForm() {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {products.map((item) => (
-              <tr key={item._id}>
-                <td className="py-4 px-6 border-b border-gray-200">
-                  <img src={item.image} width={100} />
-                </td>
-                <td className="py-4 px-6 border-b border-gray-200">{item.name}</td>
-                <td className="py-4 px-6 border-b border-gray-200">{item.description}</td>
-                <td className="py-4 px-6 border-b border-gray-200">
-                  {item.category.map((category) => (
-                    <span key={category._id} className="pr-2">
-                      {category.name}
-                    </span>
-                  ))}
-                </td>
-                <td className="py-4 px-6 border-b border-gray-200">{item.variants}</td>
-                <td className="py-4 px-6 border-b border-gray-200">{item.sizes}</td>
-                <td className="py-4 px-6 border-b border-gray-200">{item.price}</td>
+            {products &&
+              products.map((item) => (
+                <tr key={item._id}>
+                  <td className="py-4 px-6 border-b border-gray-200">
+                    <img src={item.image} width={100} />
+                  </td>
+                  <td className="py-4 px-6 border-b border-gray-200">{item.name}</td>
+                  <td className="py-4 px-6 border-b border-gray-200">{item.description}</td>
+                  <td className="py-4 px-6 border-b border-gray-200">
+                    {item.category.map((category) => {
+                      if (typeof category !== 'string') {
+                        return (
+                          <span key={category._id} className="pr-2">
+                            {category.name}
+                          </span>
+                        )
+                      }
+                    })}
+                  </td>
+                  <td className="py-4 px-6 border-b border-gray-200">{item.variants}</td>
+                  <td className="py-4 px-6 border-b border-gray-200">{item.sizes}</td>
+                  <td className="py-4 px-6 border-b border-gray-200">{item.price}</td>
 
-                <td className="py-4 px-6 border-b border-gray-200 whitespace">
-                  <button
-                    onClick={() => handleEditBtnClick(item)}
-                    className="mr-1 text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue active:bg-blue-600 py-2 px-4 font-small">
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProduct(item._id)}
-                    className="text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-blue active:bg-red-600 py-2 px-4 font-small">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+                  <td className="py-4 px-6 border-b border-gray-200 whitespace">
+                    <button
+                      onClick={() => handleEditBtnClick(item)}
+                      className="mr-1 text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue active:bg-blue-600 py-2 px-4 font-small">
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProduct(item._id)}
+                      className="text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-blue active:bg-red-600 py-2 px-4 font-small">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

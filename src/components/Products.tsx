@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect } from 'react'
 import { AppDispatch, RootState } from '../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import {
   Product,
@@ -17,7 +17,7 @@ export default function Products() {
   const currentItems = state.products.items
   const isLoading = state.products.isLoading
   const error = state.products.error
-  const userId = state.users.decodedUser.userID
+  const userId = state.users.decodedUser ? state.users.decodedUser.userID : null
 
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('pageNumber') || 1
@@ -31,6 +31,7 @@ export default function Products() {
   }
 
   const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(getCartByUserIdThunk(userId))
@@ -103,13 +104,17 @@ export default function Products() {
   }
 
   const handleIncrement = (productId: string) => {
-    dispatch(
-      addToCartThunk({
-        productIds: [productId],
-        cartId: cartItems?._id || '',
-        userId
-      })
-    )
+    if (userId) {
+      dispatch(
+        addToCartThunk({
+          productIds: [productId],
+          cartId: cartItems?._id || '',
+          userId
+        })
+      )
+    } else {
+      navigate('/login')
+    }
   }
   return (
     <div>
