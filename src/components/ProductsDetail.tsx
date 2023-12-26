@@ -1,4 +1,4 @@
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { AppDispatch, RootState } from '../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
@@ -10,8 +10,9 @@ export default function ProductsDetail() {
   const state = useSelector((state: RootState) => state)
   const selectedProduct = state.products.selectedProduct
   const cartItems = state.cart.cartItems
-  const userId = state.users.decodedUser.userID
+  const userId = state.users.decodedUser ? state.users.decodedUser.userID : null
   const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
   const { id } = useParams()
 
   useEffect(() => {
@@ -25,13 +26,17 @@ export default function ProductsDetail() {
     }
   }
   const handleIncrement = (productId: string) => {
-    dispatch(
-      addToCartThunk({
-        productIds: [productId],
-        cartId: cartItems?._id || '',
-        userId
-      })
-    )
+    if (userId) {
+      dispatch(
+        addToCartThunk({
+          productIds: [productId],
+          cartId: cartItems?._id || '',
+          userId
+        })
+      )
+    } else {
+      navigate('/login')
+    }
   }
 
   if (!selectedProduct) {
@@ -63,7 +68,7 @@ export default function ProductsDetail() {
                   {selectedProduct.description}
                 </p>
                 <p className="inline-block mb-8 text-4xl font-bold text-gray-700 dark:text-gray-400 ">
-                  <span>{selectedProduct.price}</span>
+                  <span>{selectedProduct.price}SR</span>
                 </p>
               </div>
               <div className="flex items-center mb-8">
