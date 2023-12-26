@@ -68,7 +68,7 @@ export default function ProductsDetail() {
                   {selectedProduct.description}
                 </p>
                 <p className="inline-block mb-8 text-4xl font-bold text-gray-700 dark:text-gray-400 ">
-                  <span>{selectedProduct.price}SR</span>
+                  <span>{selectedProduct.price} SR</span>
                 </p>
               </div>
               <div className="flex items-center mb-8">
