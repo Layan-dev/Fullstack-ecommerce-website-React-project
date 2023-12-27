@@ -48,11 +48,11 @@ export default function Orders() {
             <thead>
               <tr className="bg-gray-100">
                 <th className="w-1/4 py-4 px-10 text-left text-gray-600 font-bold">row</th>
-                <th className="w-1/4 py-4 px-10 text-left text-gray-600 font-bold">order ID</th>
-                <th className="w-1/4 py-4 px-10 text-left text-gray-600 font-bold">product ID</th>
-                <th className="w-1/4 py-4 px-10 text-left text-gray-600 font-bold">purchased at</th>
-                <th className="w-2/4 py-4 px-10 text-left text-gray-600 font-bold">user ID</th>
-                <th className="w-2/4 py-4 px-10 text-left text-gray-600 font-bold">Status</th>
+                <th className="w-2/4 py-4 px-10 text-left text-gray-600 font-bold">order ID</th>
+                <th className="w-2/4 py-4 px-10 text-left text-gray-600 font-bold">product ID</th>
+                <th className="w-2/4 py-4 px-10 text-left text-gray-600 font-bold">purchased at</th>
+                <th className="w-3/4 py-4 px-10 text-left text-gray-600 font-bold">user ID</th>
+                <th className="w-3/4 py-4 px-10 text-left text-gray-600 font-bold">Status</th>
               </tr>
             </thead>
             <tbody className="bg-white">
