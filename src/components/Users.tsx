@@ -56,8 +56,8 @@ export default function Users() {
             <tr className="bg-gray-100">
               <th className="w-1/5 py-4 px-6 text-left text-gray-600 font-bold">First Name</th>
               <th className="w-1/4 py-4 px-6 text-left text-gray-600 font-bold">Last Name</th>
+              <th className="w-2/4 py-4 px-6 text-left text-gray-600 font-bold">Email</th>
               <th className="w-1/4 py-4 px-6 text-left text-gray-600 font-bold">Role</th>
-              <th className="w-1/4 py-4 px-6 text-left text-gray-600 font-bold">Email</th>
               <th className="w-1/4 py-4 px-6 text-left text-gray-600 font-bold">ID</th>
               <th className="w-1/4 py-4 px-6 text-left text-gray-600 font-bold">Grant Role</th>
               <th className="w-1/4 py-4 px-6 text-left text-gray-600 font-bold">Action</th>
