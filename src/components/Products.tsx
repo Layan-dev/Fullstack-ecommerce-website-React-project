@@ -118,26 +118,48 @@ export default function Products() {
     <div>
       <div>
         <form>
-          <input
-            type="search"
-            title="search"
-            id="outlined-basic"
-            placeholder="search by company name"
-            value={name}
-            onChange={handleSearch}
-          />
-          <select
-            name="sortOrder"
-            title="sort Order"
-            onChange={(e) => handleSortOrder(e)}
-            value={sortOrder}>
-            <option>Select option</option>
-            <option>dec</option>
-            <option>asc</option>
-          </select>
+          <div className="mb-3">
+            <div className="relative mb-4 flex w-full flex-wrap items-stretch">
+              <div className="flex-left w-72 flex-row gap-3">
+                <select
+                  name="sortOrder"
+                  title="sort Order"
+                  onChange={(e) => handleSortOrder(e)}
+                  value={sortOrder}>
+                  <option>Select option</option>
+                  <option>dec</option>
+                  <option>asc</option>
+                </select>
+              </div>
+              <CategoriesComponent searchParams={searchParams} setSearchParams={setSearchParams} />
+              <input
+                className="relative m-0 block min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+                type="search"
+                title="search"
+                id="outlined-basic"
+                placeholder="search by company name"
+                value={name}
+                onChange={handleSearch}
+              />
+              <span
+                className="input-group-text flex items-center whitespace-nowrap rounded px-3 py-1.5 text-center text-base font-normal text-neutral-700 dark:text-neutral-200"
+                id="basic-addon2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-5 w-5">
+                  <path
+                    fillRule="evenodd"
+                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
         </form>
       </div>
-      <CategoriesComponent searchParams={searchParams} setSearchParams={setSearchParams} />
       <section
         id="Projects"
         className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">

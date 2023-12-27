@@ -28,7 +28,7 @@ export default function CategoriesComponent({ searchParams, setSearchParams }: P
   }
 
   return (
-    <div>
+    <div className="flex w-72 flex-row gap-6">
       <label>
         filter by category
         <select onChange={handleSelectedCategory} value={selectedCategoryId}>

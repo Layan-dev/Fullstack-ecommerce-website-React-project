@@ -37,13 +37,6 @@ export const NavBar = () => {
           <li className="pt-1.5 font-dm text-blue-700-lr font-large text-slate-1000">
             <Link to="/cart">Cart</Link>
           </li>
-          {isLoggedIn && (
-            <li className="pt-1.5 font-dm text-blue-700-lr font-large text-slate-1000">
-              <Link to="/" onClick={() => handleLogout()}>
-                Logout
-              </Link>
-            </li>
-          )}
           {isLoggedIn && isAdmin && (
             <li className="pt-1.5 font-dm text-blue-700-lr font-large text-slate-1000">
               <Link to="/admin">Admin</Link>
@@ -57,6 +50,7 @@ export const NavBar = () => {
         </ul>
 
         <div className="flex-grow"></div>
+
         {!isLoggedIn && (
           <div className="hidden items-center justify-center gap-6 md:flex">
             <li className="pt-1.5 font-dm text-blue-700-lr font-large text-slate-1000">
@@ -64,6 +58,15 @@ export const NavBar = () => {
             </li>
             <li className="rounded-md bg-gradient-to-br from-yellow-600 to-yellow-400 px-3 py-1.5 font-dm text-lr font-large text-white shadow-md shadow-blue-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]">
               <Link to="/register">Register</Link>
+            </li>
+          </div>
+        )}
+        {isLoggedIn && (
+          <div className="hidden items-center justify-center gap-6 md:flex">
+            <li className="rounded-md bg-gradient-to-br from-yellow-600 to-yellow-400 px-3 py-1.5 font-dm text-lr font-large text-white shadow-md shadow-blue-400/50 transition-transform duration-200 ease-in-out hover:scale-[1.03]">
+              <Link to="/" onClick={() => handleLogout()}>
+                Logout
+              </Link>
             </li>
           </div>
         )}
