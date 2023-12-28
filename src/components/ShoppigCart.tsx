@@ -22,7 +22,9 @@ export default function Cart() {
     )
   }
   useEffect(() => {
-    dispatch(getCartByUserIdThunk(userId))
+    if (userId) {
+      dispatch(getCartByUserIdThunk(userId))
+    }
   }, [])
   console.log(cartItems)
 

@@ -34,8 +34,9 @@ export default function Products() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(getCartByUserIdThunk(userId))
-
+    if (userId) {
+      dispatch(getCartByUserIdThunk(userId))
+    }
     if (page && categoryId) {
       handleGetByCatd(pagination.pageNumber, categoryId)
     } else if (page && sortOrder) {

@@ -44,7 +44,7 @@ export const NavBar = () => {
           )}
           {isLoggedIn && !isAdmin && (
             <li className="pt-1.5 font-dm text-blue-700-lr font-large text-slate-1000">
-              <Link to={`/${users.decodedUser.role}/${users.decodedUser.userID}`}>My Account</Link>
+              <Link to={`/${users.userData?.role}/${users.userData?.userID}`}>My Account</Link>
             </li>
           )}
         </ul>

@@ -152,7 +152,6 @@ export const usersSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(registerThunk.fulfilled, (state, action) => {
       const newUser = action.payload
-      console.log('this is the created product ', newUser)
       if (newUser) {
         state.users = [newUser, ...state.users]
         console.log(state.users)
@@ -174,7 +173,7 @@ export const usersSlice = createSlice({
     builder.addCase(loginThunk.fulfilled, (state, action) => {
       const user = action.payload.user
       state.userData = user
-      state.isAdmin = isAdmin
+      state.isAdmin = user.role === ROLES.ADMIN
       state.isLoggedIn = true
       state.isLoading = false
       console.log('is Admin', isAdmin)
