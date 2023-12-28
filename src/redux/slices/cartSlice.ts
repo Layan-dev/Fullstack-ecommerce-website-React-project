@@ -53,7 +53,7 @@ export const getCartByUserIdThunk = createAsyncThunk('cart/get', async (userId: 
 })
 export const addOrderThunk = createAsyncThunk(
   'order/add',
-  async (orderInfo: { products: string[]; userId: string }) => {
+  async (orderInfo: { products: string[]; userId: string; cartId: string }) => {
     try {
       const res = await api.post(`/api/users/orders/addNewOrder`, orderInfo)
       return res.data
@@ -80,6 +80,10 @@ export const cartSlice = createSlice({
     })
     builder.addCase(addToCartThunk.fulfilled, (state, action) => {
       state.cartItems = action.payload
+      return state
+    })
+    builder.addCase(addOrderThunk.fulfilled, (state) => {
+      state.cartItems = null
       return state
     })
   }

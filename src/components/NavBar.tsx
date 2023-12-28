@@ -18,6 +18,8 @@ export const NavBar = () => {
   function handleLogout() {
     console.log('inside logout function')
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
+
     dispatch(logout())
   }
 
@@ -44,7 +46,7 @@ export const NavBar = () => {
           )}
           {isLoggedIn && !isAdmin && (
             <li className="pt-1.5 font-dm text-blue-700-lr font-large text-slate-1000">
-              <Link to={`/${users.userData?.role}/${users.userData?.userID}`}>My Account</Link>
+              <Link to={`/${users.userData?.role}/${users.userData?._id}`}>My Account</Link>
             </li>
           )}
         </ul>

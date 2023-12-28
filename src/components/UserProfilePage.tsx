@@ -4,11 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { AppDispatch, RootState } from '../redux/store'
 
 import { useParams } from 'react-router'
-import {
-  getSingleUserThunk,
-  updateUserFromPayload,
-  updateUserProfileThunk
-} from '../redux/slices/products/usersSlice'
+import { getSingleUserThunk, updateUserProfileThunk } from '../redux/slices/products/usersSlice'
 
 export default function UserProfilePage() {
   const users = useSelector((state: RootState) => state.users)
@@ -27,7 +23,7 @@ export default function UserProfilePage() {
   useEffect(() => {
     handleGetUsers()
     if (userData) {
-      setUser({ firstName: userData.firstName, lastName: userData.lastName, _id: userData.userID })
+      setUser({ firstName: userData.firstName, lastName: userData.lastName, _id: userData._id })
     }
   }, [])
 
@@ -47,7 +43,6 @@ export default function UserProfilePage() {
           console.log('productData', productData)
 
           setUser(productData)
-          dispatch(updateUserFromPayload(productData))
         })
         .catch((error) => {
           console.log(error)

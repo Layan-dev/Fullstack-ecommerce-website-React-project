@@ -2,7 +2,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import api from '../../../api'
 
-import { getDecodedTokenFromStorage, getTokenFromStorage } from '../../../utils/token'
+import { getTokenFromStorage, getUserFromStorage } from '../../../utils/token'
 import { ROLES } from '../../../constants'
 
 export type Role = keyof typeof ROLES
@@ -16,8 +16,6 @@ export type User = {
   role: Role
 }
 
-const user = getDecodedTokenFromStorage()
-
 export type DecodedUser = {
   firstName: string
   lastName: string
@@ -29,26 +27,24 @@ export type DecodedUser = {
 }
 export type UserState = {
   users: User[]
-  decodedUser: any
   error: null | string
   isLoading: boolean
   isLoggedIn: boolean
   isAdmin: boolean
-  userData: DecodedUser | null
+  userData: User | null
 }
 
 const isLoggedIn = !!getTokenFromStorage()
-const decodedUser = getDecodedTokenFromStorage()
-const isAdmin = decodedUser?.role === ROLES.ADMIN
+const userData = getUserFromStorage()
+const isAdmin = userData?.role === ROLES.ADMIN
 
 const initialState: UserState = {
   users: [],
-  decodedUser,
   error: null,
   isLoading: false,
   isLoggedIn,
   isAdmin,
-  userData: decodedUser
+  userData
 }
 export const registerThunk = createAsyncThunk('user/register', async (user: Partial<User>) => {
   try {
@@ -64,7 +60,11 @@ export const loginThunk = createAsyncThunk(
     try {
       const res = await api.post('/api/auth/login', credentials)
       const token = res.data.token
+      const user = res.data.user
+
       localStorage.setItem('token', token)
+      localStorage.setItem('user', JSON.stringify(user))
+
       api.defaults.headers['Authorization'] = `Bearer ${token}`
       return res.data
     } catch (error) {
@@ -72,7 +72,7 @@ export const loginThunk = createAsyncThunk(
     }
   }
 )
-export const getUsersThunk = createAsyncThunk('user/get', async () => {
+export const getUsersThunk = createAsyncThunk('users/get', async () => {
   try {
     const res = await api.get('/api/users/admin/getAllUsers')
     return res.data.users
@@ -112,7 +112,7 @@ export const updateUserProfileThunk = createAsyncThunk(
       const res = await api.put(`/api/users/profile/${userId}`, updatedUser)
       const data = res.data
       console.log('data inside update user thunk', data)
-      return { data }
+      return data
     } catch (error) {
       console.log('👀 ', error)
     }
@@ -204,16 +204,12 @@ export const usersSlice = createSlice({
       return state
     })
     builder.addCase(updateUserProfileThunk.fulfilled, (state, action) => {
-      const updatedUser = action.payload?.data.user
+      const updatedUser = action.payload.user
       console.log('updated user', updatedUser)
-      const userId = updatedUser?._id
       if (updatedUser) {
-        const updatedUsers = state.users.map((user) =>
-          user._id === userId ? { ...user, ...updatedUser } : user
-        )
-        state.users = updatedUsers
-        state.userData = { ...updatedUser } as DecodedUser
+        state.userData = updatedUser
       }
+      return state
     })
   }
 })

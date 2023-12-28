@@ -9,8 +9,9 @@ import { Link } from 'react-router-dom'
 export default function Cart() {
   const dispatch = useDispatch<AppDispatch>()
   const state = useSelector((state: RootState) => state)
+  console.log(state)
   const cartItems = state.cart.cartItems
-  const userId = state.users.decodedUser ? state.users.decodedUser.userID : null
+  const userId = state.users.userData ? state.users.userData._id : null
   if (!userId) {
     return (
       <div>
@@ -26,7 +27,6 @@ export default function Cart() {
       dispatch(getCartByUserIdThunk(userId))
     }
   }, [])
-  console.log(cartItems)
 
   if (!cartItems) {
     return <p>No Cart found</p>
@@ -40,12 +40,9 @@ export default function Cart() {
     return { ...acc, [key]: [...curGroup, obj] }
   }, {} as { [id: string]: Product[] })
 
-  console.log(groupedProducts)
-  console.log(Object.keys(groupedProducts))
-
   const handleCheckOut = () => {
     const productId = cartItems.products.map((product) => product._id)
-    dispatch(addOrderThunk({ userId: userId, products: productId }))
+    dispatch(addOrderThunk({ userId: userId, products: productId, cartId: cartItems._id }))
     console.log(productId)
   }
 

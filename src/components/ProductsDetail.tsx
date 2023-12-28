@@ -10,7 +10,7 @@ export default function ProductsDetail() {
   const state = useSelector((state: RootState) => state)
   const selectedProduct = state.products.selectedProduct
   const cartItems = state.cart.cartItems
-  const userId = state.users.decodedUser ? state.users.decodedUser.userID : null
+  const userId = state.users.userData ? state.users.userData._id : null
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const { id } = useParams()

@@ -17,7 +17,7 @@ export default function Products() {
   const currentItems = state.products.items
   const isLoading = state.products.isLoading
   const error = state.products.error
-  const userId = state.users.decodedUser ? state.users.decodedUser.userID : null
+  const userId = state.users.userData ? state.users.userData._id : null
 
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('pageNumber') || 1

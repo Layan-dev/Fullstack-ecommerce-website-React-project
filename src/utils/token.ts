@@ -11,6 +11,7 @@ export function isExpired() {
   if (expiredAt * 1000 < new Date().getTime()) {
     console.log('expired')
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
     return true
   } else {
     return false
@@ -39,4 +40,17 @@ export function getTokenFromStorage() {
     return token
   }
   return null
+}
+
+export function getUserFromStorage() {
+  const user = localStorage.getItem('user')
+  if (!user) return null
+
+  try {
+    return JSON.parse(user)
+  } catch (error) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    return null
+  }
 }
